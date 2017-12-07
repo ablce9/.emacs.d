@@ -11,13 +11,11 @@
 
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
-(global-set-key (kbd "C-c p")
-		(lambda() (interactive) (load-file "~/.bashrc")))
 
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
 (set-face-attribute 'default nil :height 50)
-(setq linum-format "%3d\u2502")
+(setq linum-format "%3d \u2502")
 (line-number-mode)
 (global-linum-mode 1)
 (setq column-number-mode t)
@@ -42,7 +40,7 @@
 (set-face-foreground 'highlight nil)
 
 (defun open-nice()
-  "this macro lets you open window nice"
+  "A macro lets you open windows nice"
   (interactive)
   (let* ((parent (if (buffer-file-name)
 		     (file-name-directory (buffer-file-name))
@@ -51,7 +49,6 @@
 	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)
-    ;; (rename-buffer (concat "*opened: " name "*"))
     )
   )
 
@@ -81,7 +78,6 @@ to make multiple eshell windows easier."
   (insert "exit")
   (eshell-send-input)
   (delete-window)
-  ;; eshell-display-predicate-help
   )
 
 ;;; init.el ends here
