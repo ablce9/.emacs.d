@@ -80,4 +80,12 @@ to make multiple eshell windows easier."
   (delete-window)
   )
 
+;; support languages
+(add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
+;;
+;; go get github.com/dominikh/go-mode.el/blob/master/go-mode.el
+;; (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
+
 ;;; init.el ends here
