@@ -15,7 +15,7 @@
 (package-initialize)
 
 (if (not
-     (fboundp 'flycheck-versio))
+     (fboundp 'flycheck-mode))
     (package-list-packages)
   (message "ready for work")
   )
@@ -31,9 +31,10 @@
    helm
    auto-complete
    go-mode
-   magit
    )
  )
+
+(global-set-key (kbd "C-c p") 'magit-status)
 
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
