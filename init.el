@@ -31,6 +31,7 @@
    helm
    auto-complete
    go-mode
+   magit
    )
  )
 
