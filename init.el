@@ -1,21 +1,41 @@
-;;; package -- init.el
+;;; package -- init.el -- Let's get started with Emacs
+;;; on whatever machines
+
+;;; Commentary:
+
+;;; Author: xun shunsuketamiya@posteo.net and bunch of
+;;; Emacs hackers from the world
 
 ;;; Code:
 
+(require 'package)
+(add-to-list 'package-archives
+             '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
+
+;; check if I have favourite packages
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (package-install package)))
+ '(
+   ;; add packages you like
+   flycheck
+   helm
+   auto-complete
+   go-mode
+   )
+ )
 
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
 
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
-(set-face-attribute 'default nil :height 50)
-(setq linum-format "%3d \u2502")
+(defvar linum-format
+  (setq linum-format "%3d \u2502")
+  )
 (line-number-mode)
 (global-linum-mode 1)
 (setq column-number-mode t)
@@ -55,7 +75,7 @@
 (global-set-key (kbd "C-c o") 'open-nice)
 
 (defun eshell-here()
-  "Opens up a new shell in the directory associated with the 
+  "Opens up a new shell in the directory associated with the
 current buffer's file. The eshell is renamed to match that directory
 to make multiple eshell windows easier."
   (interactive)
@@ -75,6 +95,7 @@ to make multiple eshell windows easier."
 (global-set-key (kbd "C-c e") 'eshell-here)
 
 (defun eshell/x ()
+  "Exit eshell."
   (insert "exit")
   (eshell-send-input)
   (delete-window)
