@@ -14,6 +14,12 @@
 
 (package-initialize)
 
+(if (not
+     (fboundp 'flycheck-versio))
+    (package-list-packages)
+  (message "ready for work")
+  )
+
 ;; check if I have favourite packages
 (mapc
  (lambda (package)
@@ -25,6 +31,7 @@
    helm
    auto-complete
    go-mode
+   magit
    )
  )
 
