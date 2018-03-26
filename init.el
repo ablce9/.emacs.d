@@ -35,11 +35,22 @@
    )
  )
 
-(global-set-key (kbd "C-c p") 'magit-status)
+(require 'magit)
+(require 'go-mode)
 
+(require 'helm)
+(require 'helm-config)
+(setq helm-candidate-number-limit 100)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-h C-m") 'helm-mini)
+(global-set-key (kbd "C-h C-b") 'helm-buffers-list)
+(global-set-key (kbd "C-h C-a") 'helm-apropos)
+
+(global-auto-complete-mode 1)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(global-set-key (kbd "C-c p") 'magit-status)
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
-
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
 (defvar linum-format
