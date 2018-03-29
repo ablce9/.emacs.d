@@ -11,7 +11,6 @@
 (require 'package)
 (add-to-list 'package-archives
              '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
-
 (package-initialize)
 
 (if (not
@@ -32,6 +31,11 @@
    auto-complete
    go-mode
    magit
+   js2-mode
+   json-mode
+   web-mode
+   elpy
+   exec-path-from-shell
    )
  )
 
@@ -40,18 +44,73 @@
 
 (require 'helm)
 (require 'helm-config)
+(require 'flycheck)
 (setq helm-candidate-number-limit 100)
+
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-h C-m") 'helm-mini)
 (global-set-key (kbd "C-h C-b") 'helm-buffers-list)
 (global-set-key (kbd "C-h C-a") 'helm-apropos)
 
 (global-auto-complete-mode 1)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; disable auto-loading
+(setq-default flycheck-disabled-checkers
+	      (append flycheck-disabled-checkers
+		      '(javascript-jshint)
+		      '(json-jsonlist)))
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; flycheck prefix
+(setq-default flycheck-temp-prefix "~/.backups/.flycheck")
+
+;; domain-specific problem on MacOS
+(when (memq window-system '(mac nc))
+  (exec-path-from-shell-initialize))
+
+;; eslint loading from node_modules/eslint/bin/eslint
+;; https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
+(defun load-eslint-from-node_modules ()
+  "Eslint loading from node_modules/eslint/bin/eslint."
+  (interactive)
+  (let* ((root (locate-dominating-file
+		(or (buffer-file-name) default-directory)
+		"node-module"))
+	 (eslint (and root
+		      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
+       (when (and eslint (file-executeable-p eslint))
+	 (setq-local flycheck-javascript-eslint-executeable eslint))))
+
+;; hooks
+(add-hook 'after-init-hook
+	  #'global-flycheck-mode
+	  )
+
+(add-hook 'flycheck-mode-hook
+	  #'load-eslint-from-node_modules)
+
 (global-set-key (kbd "C-c p") 'magit-status)
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
+
+;; indent for javscript
+(add-hook 'js2-mode-hook (lambda() (setq indent-tabs-mode nil)))
+(add-hook 'js2-mode-hook (lambda() (message "js2-mode-hook")))
+
 (define-key global-map (kbd "C-c q") 'replace-regexp)
+
+;; elpy
+;; configure with flake8 https://github.com/jorgenschaefer/elpy/wiki/Configuration
+;; cp pep.cfg $HOME/.config/flake8
+(when (require 'elpy nil t)
+  (elpy-enable))
+
+;; emacs/init-examples
+(setq-default case-fold-search nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 (defvar linum-format
   (setq linum-format "%3d \u2502")
@@ -123,10 +182,7 @@ to make multiple eshell windows easier."
 
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . javascript-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
-;;
-;; go get github.com/dominikh/go-mode.el/blob/master/go-mode.el
-;; (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
 
 ;;; init.el ends here
