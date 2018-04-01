@@ -99,6 +99,9 @@
 
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
+;; magit
+(define-key global-map (kbd "C-c g") 'magit-status)
+
 ;; elpy
 ;; configure with flake8 https://github.com/jorgenschaefer/elpy/wiki/Configuration
 ;; cp pep.cfg $HOME/.config/flake8
@@ -135,7 +138,7 @@
 (load-theme 'jqg t)
 
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "red")
+(set-face-background 'hl-line "green")
 (set-face-foreground 'highlight nil)
 
 (defun open-nice()
@@ -180,9 +183,40 @@ to make multiple eshell windows easier."
   (delete-window)
   )
 
+;; https://www.kernel.org/doc/html/v4.10/process/coding-style.html#you-ve-made-a-mess-of-it
+(defun c-lineup-arglist-tabs-only (ignored)
+  "Line up argument lists by tabs, not spaces."
+  (let* ((anchor (c-langelem-pos c-syntactic-element))
+         (column (c-langelem-2nd-pos c-syntactic-element))
+         (offset (- (1+ column) anchor))
+         (steps (floor offset c-basic-offset)))
+    (* (max steps 1)
+       c-basic-offset)))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            ;; Add kernel style
+            (c-add-style
+             "linux-tabs-only"
+             '("linux" (c-offsets-alist
+                        (arglist-cont-nonempty
+                         c-lineup-gcc-asm-reg
+                         c-lineup-arglist-tabs-only))))))
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (let ((filename (buffer-file-name)))
+              ;; Enable kernel mode for the appropriate files
+              (when (and filename
+                         (string-match (expand-file-name "~/src/linux-trees")
+                                       filename))
+                (setq indent-tabs-mode t)
+                (setq show-trailing-whitespace t)
+                (c-set-style "linux-tabs-only")))))
+
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
-
+(add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
 ;;; init.el ends here
