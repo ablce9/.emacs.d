@@ -41,7 +41,6 @@
 
 (require 'magit)
 (require 'go-mode)
-
 (require 'helm)
 (require 'helm-config)
 (require 'flycheck)
@@ -82,9 +81,13 @@
 	 (setq-local flycheck-javascript-eslint-executeable eslint))))
 
 ;; hooks
-(add-hook 'after-init-hook
-	  #'global-flycheck-mode
-	  )
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook 'whitespace-cleanup)
+
+(add-hook 'js2-mode (lambda ()
+		      (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (add-hook 'flycheck-mode-hook
 	  #'load-eslint-from-node_modules)
@@ -95,7 +98,14 @@
 
 ;; indent for javscript
 (add-hook 'js2-mode-hook (lambda() (setq indent-tabs-mode nil)))
-(add-hook 'js2-mode-hook (lambda() (message "js2-mode-hook")))
+(add-hook 'js2-mode-hook (lambda() (message "js2-mode-hook?")))
+
+(defun json-format ()
+  "The go-format for json."
+  (interactive)
+  (shell-command-on-region (point-min) (point-max)
+			   "python -c 'import json,sys;d=json.loads(sys.stdin.read());print json.dumps(d,sort_keys=True,indent=2)'"
+			   (current-buffer) t))
 
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
@@ -217,6 +227,9 @@ to make multiple eshell windows easier."
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . js2-mode))
+;; json indent ...
+(add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
+(add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
 ;;; init.el ends here
