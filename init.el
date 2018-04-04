@@ -10,7 +10,7 @@
 
 (require 'package)
 (add-to-list 'package-archives
-             '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
+	     '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
 (package-initialize)
 
 (if (not
@@ -60,6 +60,17 @@
 		      '(json-jsonlist)))
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 
+(add-hook 'web-mode-hook (lambda ()
+			   (setq indent-tabs-mode nil)
+			   (setq web-mode-css-indent-offset 4)))
+
+(setq web-mode-enable-auto-closing t)
+(setq web-mode-enable-auto-pairing t)
+
+(add-hook 'js-jsx-mode (lambda ()
+			 (setq js-indent-level 4)
+			 (setq indent-tabs-mode nil)))
+
 ;; flycheck prefix
 (setq-default flycheck-temp-prefix "~/.backups/.flycheck")
 
@@ -104,7 +115,7 @@
   "The go-format for json."
   (interactive)
   (shell-command-on-region (point-min) (point-max)
-			   "python -c 'import json,sys;d=json.loads(sys.stdin.read());print json.dumps(d,sort_keys=True,indent=2)'"
+			   "python -mjson.tool"
 			   (current-buffer) t))
 
 (define-key global-map (kbd "C-c q") 'replace-regexp)
@@ -180,11 +191,12 @@ to make multiple eshell windows easier."
   (other-window 1)
   (eshell "new")
   (rename-buffer (concat "*eshell: " name "*"))
-  
+
   (insert (concat "ls"))
   (eshell-send-input)))
 
 (global-set-key (kbd "C-c e") 'eshell-here)
+(global-set-key (kbd "C-x g") 'goto-line)
 
 (defun eshell/x ()
   "Exit eshell."
@@ -197,38 +209,39 @@ to make multiple eshell windows easier."
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces."
   (let* ((anchor (c-langelem-pos c-syntactic-element))
-         (column (c-langelem-2nd-pos c-syntactic-element))
-         (offset (- (1+ column) anchor))
-         (steps (floor offset c-basic-offset)))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
     (* (max steps 1)
        c-basic-offset)))
 
 (add-hook 'c-mode-common-hook
-          (lambda ()
-            ;; Add kernel style
-            (c-add-style
-             "linux-tabs-only"
-             '("linux" (c-offsets-alist
-                        (arglist-cont-nonempty
-                         c-lineup-gcc-asm-reg
-                         c-lineup-arglist-tabs-only))))))
+	  (lambda ()
+	    ;; Add kernel style
+	    (c-add-style
+	     "linux-tabs-only"
+	     '("linux" (c-offsets-alist
+			(arglist-cont-nonempty
+			 c-lineup-gcc-asm-reg
+			 c-lineup-arglist-tabs-only))))))
 
 (add-hook 'c-mode-hook
-          (lambda ()
-            (let ((filename (buffer-file-name)))
-              ;; Enable kernel mode for the appropriate files
-              (when (and filename
-                         (string-match (expand-file-name "~/src/linux-trees")
-                                       filename))
-                (setq indent-tabs-mode t)
-                (setq show-trailing-whitespace t)
-                (c-set-style "linux-tabs-only")))))
+	  (lambda ()
+	    (let ((filename (buffer-file-name)))
+	      ;; Enable kernel mode for the appropriate files
+	      (when (and filename
+			 (string-match (expand-file-name "~/src/linux-trees")
+				       filename))
+		(setq indent-tabs-mode t)
+		(setq show-trailing-whitespace t)
+		(c-set-style "linux-tabs-only")))))
 
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . web-mode))
 ;; json indent ...
 (add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(scss\\|css\\)" . web-mode))
 (add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
