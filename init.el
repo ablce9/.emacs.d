@@ -1,10 +1,5 @@
-;;; package -- init.el -- Let's get started with Emacs
-;;; on whatever machines
-
+;;; package -- init.el
 ;;; Commentary:
-
-;;; Author: xun shunsuketamiya@posteo.net and bunch of
-;;; Emacs hackers from the world
 
 ;;; Code:
 
@@ -51,6 +46,9 @@
 (global-set-key (kbd "C-h C-b") 'helm-buffers-list)
 (global-set-key (kbd "C-h C-a") 'helm-apropos)
 
+(global-set-key (kbd "C-c t")   'beginning-of-buffer)
+(global-set-key (kbd "C-c r")   'end-of-buffer)
+
 (global-auto-complete-mode 1)
 
 ;; disable auto-loading
@@ -77,6 +75,9 @@
 ;; domain-specific problem on MacOS
 (when (memq window-system '(mac nc))
   (exec-path-from-shell-initialize))
+
+(setq web-mode-content-types-alist
+  '(("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
 
 ;; eslint loading from node_modules/eslint/bin/eslint
 ;; https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable
@@ -111,6 +112,11 @@
 (add-hook 'js2-mode-hook (lambda() (setq indent-tabs-mode nil)))
 (add-hook 'js2-mode-hook (lambda() (message "js2-mode-hook?")))
 
+(defun search (item)
+  "Quick search :ITEM."
+  (interactive "sitem: ")
+  (shell-command(shell-command-to-string (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
+
 (defun json-format ()
   "The go-format for json."
   (interactive)
@@ -130,7 +136,7 @@
   (elpy-enable))
 
 ;; emacs/init-examples
-(setq-default case-fold-search nil)
+;; (setq-default case-fold-search nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -198,6 +204,8 @@ to make multiple eshell windows easier."
 (global-set-key (kbd "C-c e") 'eshell-here)
 (global-set-key (kbd "C-x g") 'goto-line)
 
+(add-to-list 'default-frame-alist '(font "Monospace-8"))
+
 (defun eshell/x ()
   "Exit eshell."
   (insert "exit")
@@ -207,7 +215,7 @@ to make multiple eshell windows easier."
 
 ;; https://www.kernel.org/doc/html/v4.10/process/coding-style.html#you-ve-made-a-mess-of-it
 (defun c-lineup-arglist-tabs-only (ignored)
-  "Line up argument lists by tabs, not spaces."
+  "Line up argument lists by tabs, not spaces :IGNORED."
   (let* ((anchor (c-langelem-pos c-syntactic-element))
 	 (column (c-langelem-2nd-pos c-syntactic-element))
 	 (offset (- (1+ column) anchor))
@@ -245,4 +253,5 @@ to make multiple eshell windows easier."
 (add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
+
 ;;; init.el ends here
