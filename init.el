@@ -1,6 +1,6 @@
 ;;; package -- init.el
 ;;; Commentary:
-
+;;; This is my Emacs config.
 ;;; Code:
 
 (require 'package)
@@ -246,12 +246,16 @@ to make multiple eshell windows easier."
 
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\)" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\\\|html\\)" . web-mode))
 ;; json indent ...
 (add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(scss\\|css\\)" . web-mode))
 (add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
+
+(load-file "~/.emacs.d/yaml-mode.el")
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
 ;;; init.el ends here

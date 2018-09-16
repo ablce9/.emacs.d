@@ -1,0 +1,1 @@
+/home/xun/.git-prompt.sh
