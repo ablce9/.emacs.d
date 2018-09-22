@@ -1,0 +1,29 @@
+export ARCHFLAGS="-arch x86_64"
+export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
+export MANPATH="/usr/local/man:$MANPATH"
+export LANG=en_US.UTF-8
+
+### GOLANG
+export GOROOT="/usr/local/go"
+export GOPATH="$HOME/.workspace"
+export GOBIN="$GOPATH/bin"
+export PATH="$PATH:$GOBIN"
+export PATH=$PATH:$GOBIN
+
+#### scala
+# export SCALA_HOME=$GOPATH/scala
+
+export USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export EDITOR=/usr/local/bin/emacs
+export GPG_TTY=$(tty)
+export LD_LIBRARY_PATH=/usr/local/lib
+
+## unset proxy
+unset all_proxy ALL_PROXY
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export ANSIBLE_INVENTORY=~/.ansible/hosts

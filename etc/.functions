@@ -1,1 +1,75 @@
-/home/xun/.functions
+# `o` with no arguments opens the current directory, otherwise opens the given
+# location
+o()
+{
+    if [ $# -eq 0 ]; then
+	xdg-open .	> /dev/null 2>&1
+    else
+	xdg-open "$@" > /dev/null 2>&1
+    fi
+}
+
+# Get colors in manual pages
+man()
+{
+    env \
+	LESS_TERMCAP_mb="$(printf '\e[1;31m')" \
+	LESS_TERMCAP_md="$(printf '\e[1;31m')" \
+	LESS_TERMCAP_me="$(printf '\e[0m')" \
+	LESS_TERMCAP_se="$(printf '\e[0m')" \
+	LESS_TERMCAP_so="$(printf '\e[1;44;33m')" \
+	LESS_TERMCAP_ue="$(printf '\e[0m')" \
+	LESS_TERMCAP_us="$(printf '\e[1;32m')" \
+	man "$@"
+}
+
+restart_gpgagent()
+{
+    # Restart the gpg agent.
+    # shellcheck disable=SC2046
+    kill -9 $(pidof scdaemon) >/dev/null 2>&1
+    # shellcheck disable=SC2046
+    kill -9 $(pidof gpg-agent) >/dev/null 2>&1
+    gpg-connect-agent /bye >/dev/null 2>&1
+    gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+}
+
+# Make a temporary directory and enter it
+tmpd()
+{
+    local dir
+    if [ $# -eq 0 ]; then
+	dir=$(mktemp -d)
+    else
+	dir=$(mktemp -d -t "${1}.XXXXXXXXXX")
+    fi
+    cd "$dir" || exit
+}
+
+mkd ()
+{
+    mkdir -p "$1"
+    cd "$1"
+}
+
+word_choice()
+{
+    look . | shuf | head -n 1
+}
+
+faces()
+{
+    $(which node) --eval 'require("os");Object.entries(os.networkInterfaces()).reduce((a, [key, val]) => { var face=key, addr=val[0]["address"];console.log(`\tiface=${face}\taddr=${addr}\tcidr=${val[0]["cidr"]}`)})'|sort
+}
+
+toimg ()
+{
+    echo -e "<html>\n<head>\n<meta charset=\"utf-8\">\n<meta http-equiv=\"X-UA-Compatible\">\n</head>\n<body>\n"
+    perl -e 'my $dir = "."; opendir my $dh, $dir or die"failedOpen";while ($d = readdir $dh){printf "<img width=340px height=500px alt=\"$d\" src=\"$d\"></img>\n"};closedir $dh;' | sort
+    echo -e "</body>\n</html>"
+}
+
+uuid4()
+{
+    python 'import uuid;print uuid.uuid4();'
+}

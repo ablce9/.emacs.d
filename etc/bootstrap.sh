@@ -68,6 +68,13 @@ base_min() {
 
 # install/update golang from source
 install_golang() {
+    USER="$@"
+
+    if [ -z "$USER" ]; then
+	echo "Need username. $USER"
+	exit 1
+    fi
+
     export GO_VERSION
     GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
     export GO_SRC=/usr/local/go
@@ -122,48 +129,57 @@ install_scripts() {
 }
 
 install_docker() {
-	# add docker apt repo
-	cat <<-EOF > /etc/apt/sources.list.d/docker.list
+    USER="$@"
+
+    if [ -z "$USER" ]; then
+	echo "Need username. $USER"
+	exit 1
+    fi
+
+    echo "+setup_docker for: $USER"
+
+    # add docker apt repo
+    cat <<-EOF > /etc/apt/sources.list.d/docker.list
 	deb https://apt.dockerproject.org/repo debian-stretch main
 	deb https://apt.dockerproject.org/repo debian-stretch testing
 	deb https://apt.dockerproject.org/repo debian-stretch experimental
 	EOF
 
-	# add docker gpg key
-	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-	# create docker group
-	sudo groupadd docker
-	sudo gpasswd -a "$USER" docker
+    # add docker gpg key
+    apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+    # create docker group
+    sudo groupadd docker
+    sudo gpasswd -a "$USER" docker
 
-	# Include contributed completions
-	mkdir -p /etc/bash_completion.d
-	curl -sSL -o /etc/bash_completion.d/docker https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker
+    # Include contributed completions
+    mkdir -p /etc/bash_completion.d
+    curl -sSL -o /etc/bash_completion.d/docker https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker
 
-	# get the binary
-	local tmp_tar=/tmp/docker.tgz
-	local binary_uri="https://download.docker.com/linux/static/edge/x86_64"
-	local docker_version
-	docker_version=$(curl -sSL "https://api.github.com/repos/docker/docker-ce/releases/latest" | jq --raw-output .tag_name)
-	docker_version=${docker_version#v}
-	# local docker_sha256
-	# docker_sha256=$(curl -sSL "${binary_uri}/docker-${docker_version}.tgz.sha256" | awk '{print $1}')
-	(
+    # get the binary
+    local tmp_tar=/tmp/docker.tgz
+    local binary_uri="https://download.docker.com/linux/static/edge/x86_64"
+    local docker_version
+    docker_version=$(curl -sSL "https://api.github.com/repos/docker/docker-ce/releases/latest" | jq --raw-output .tag_name)
+    docker_version=${docker_version#v}
+    # local docker_sha256
+    # docker_sha256=$(curl -sSL "${binary_uri}/docker-${docker_version}.tgz.sha256" | awk '{print $1}')
+    (
 	set -x
 	curl -fSL "${binary_uri}/docker-${docker_version}.tgz" -o "${tmp_tar}"
 	# echo "${docker_sha256} ${tmp_tar}" | sha256sum -c -
 	tar -C /usr/local/bin --strip-components 1 -xzvf "${tmp_tar}"
 	rm "${tmp_tar}"
 	docker -v
-	)
-	chmod +x /usr/local/bin/docker*
+    )
+    chmod +x /usr/local/bin/docker*
 
-	systemctl daemon-reload
-	systemctl enable docker
+    systemctl daemon-reload
+    systemctl enable docker
 
-	# update grub with docker configs and power-saving items
-	sed -i.bak 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor page_poison=1 slab_nomerge vsyscall=none"/g' /etc/default/grub
-	echo "Docker has been installed. If you want memory management & swap"
-	echo "run update-grub & reboot"
+    # update grub with docker configs and power-saving items
+    sed -i.bak 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor page_poison=1 slab_nomerge vsyscall=none"/g' /etc/default/grub
+    echo "Docker has been installed. If you want memory management & swap"
+    echo "run update-grub & reboot"
 
 }
 
@@ -253,13 +269,13 @@ install_dotfiles()
 usage()
 {
     echo "usage:"
-    echo " setupsudo        need a \$user"
+    echo " setup_sudo        need a \$user"
     echo " install_dotfiles  install .bashrc and others to \$HOME"
     echo " setup_apt         setup for debian9"
     echo " base_min          minimum installation"
-    echo " install_scripts   install usueful scripts"
-    echo " install_golang    USER=xun install_golang"
-    echo " install_docker    USER=xun install_docker"
+    echo " install_scripts   install useful scripts"
+    echo " install_golang    install_golang \$user"
+    echo " install_docker    install_docker \$user"
     exit 1
 }
 
@@ -269,7 +285,7 @@ main()
 	usage
     fi
     case "$1" in
-	"setupsudo")
+	"setup_sudo")
 	    setup_sudo "$2"
 	    ;;
 	"install_dotfiles")
