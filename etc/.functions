@@ -73,3 +73,11 @@ uuid4()
 {
     python 'import uuid;print uuid.uuid4();'
 }
+
+# Escapde safely like
+# % echo foo do [s3x01] bar.avi | safe_escape
+# % foo\ doo\ \[s3x01\]\ bar.avi
+safe_escape()
+{
+    sed -e 's/ /\\ /g; s/\[/\\[/g; s/\]/\\]/g; s/\?/\\?/g;'
+}

@@ -51,8 +51,4 @@ shopt -u shift_verbose		 2>/dev/null
 shopt -s sourcepath		 2>/dev/null
 shopt -u xpg_echo                2>/dev/null
 
-if [ -f ~/.bash_env ]; then
-    . ~/.bash_env
-fi
-
 . ~/.bashrc

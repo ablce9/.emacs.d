@@ -27,3 +27,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export ANSIBLE_INVENTORY=~/.ansible/hosts
+
+# https://chromium.googlesource.com/chromium/src/+/master/docs/linux_suid_sandbox_development.md
+export CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome_sandbox
