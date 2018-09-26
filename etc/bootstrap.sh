@@ -4,7 +4,8 @@ set -e
 
 PROJECT_ROOT=$(dirname "${BASH_SOURCE}")
 DOT_FILES=(
-    .aliases .bash_profile .bashrc .functions .gdbinit .gitconfig .git-prompt.sh
+    .aliases .bash_profile .bashrc .functions .gdbinit .gitconfig
+    .git-prompt.sh .pep.cfg
 )
 
 base_min() {

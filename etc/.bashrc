@@ -84,3 +84,5 @@ fi
 
 # remap keybaord, caps lock fucks me.
 setxkbmap -option caps:ctrl_modifier
+
+load_sshagent 2 >/dev/null

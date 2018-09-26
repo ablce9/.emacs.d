@@ -13,7 +13,7 @@ export PATH=$PATH:$GOBIN
 #### scala
 # export SCALA_HOME=$GOPATH/scala
 
-export USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36"
+export USER_AGENT="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export EDITOR=/usr/local/bin/emacs
 export GPG_TTY=$(tty)
