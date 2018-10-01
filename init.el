@@ -20,25 +20,19 @@
    (unless (package-installed-p package)
      (package-install package)))
  '(
-   ;; add packages you like
    flycheck
    helm
    auto-complete
    go-mode
    magit
-   js2-mode
-   json-mode
    web-mode
    elpy
    exec-path-from-shell
    )
  )
 
-(require 'magit)
-(require 'go-mode)
 (require 'helm)
 (require 'helm-config)
-(require 'flycheck)
 (setq helm-candidate-number-limit 100)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -52,6 +46,7 @@
 (global-auto-complete-mode 1)
 
 ;; disable auto-loading
+(require 'flycheck)
 (setq-default flycheck-disabled-checkers
 	      (append flycheck-disabled-checkers
 		      '(javascript-jshint)
@@ -97,14 +92,12 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
-(add-hook 'js2-mode (lambda ()
-		      (add-hook 'before-save-hook 'delete-trailing-whitespace)))
-
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 (add-hook 'flycheck-mode-hook
 	  #'load-eslint-from-node_modules)
 
+(require 'magit)
 (global-set-key (kbd "C-c p") 'magit-status)
 (global-set-key (kbd "C-c i")
 		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
@@ -116,7 +109,8 @@
 (defun search (item)
   "Quick search :ITEM."
   (interactive "sitem: ")
-  (shell-command(shell-command-to-string (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
+  (shell-command(shell-command-to-string
+		 (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
 
 (defun json-format ()
   "The go-format for json."
@@ -178,9 +172,7 @@
 	 (height (/ (window-total-height) 3))
 	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
-    (other-window 1)
-    )
-  )
+    (other-window 1)))
 
 (global-set-key (kbd "C-c o") 'open-nice)
 
@@ -247,15 +239,22 @@ to make multiple eshell windows easier."
 
 ;; support languages
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(jsx\\|js\\\\|html\\)" . web-mode))
+(add-to-list 'flycheck-disabled-checkers 'javascript)
+(add-to-list 'auto-mode-alist '("\\.\\(js\\\\|html\\)" .
+				(lambda ()
+				  (web-mode)
+				  (flycheck-mode -1))))
 ;; json indent ...
 (add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(scss\\|css\\)" . web-mode))
 (add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
-(add-to-list 'auto-mode-alist '("\\.\\(go\\)" . go-mode))
+
+(require 'go-mode)
+(add-to-list 'auto-mode-alist '("\\.go" . go-mode))
 
 (load-file "~/.emacs.d/yaml-mode.el")
+
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 

@@ -58,18 +58,48 @@ fi
 HISTSIZE=-1
 HISTFILESIZE=-1
 
-# set a fancy prompt (non-color, overwrite the one in /etc/profile)
-PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-
 . ~/.git-prompt.sh
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUPSTREAM="auto"
 export GIT_PS1_SHOWCOLORHINTS=1
-export PROMPT_COMMAND='__git_ps1 "\[\033[00;36m\]\u@\h\[\033[00m\]:\[\033[01;31m\]\W\\[\033[00m\]" " \\\$ "'
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_PS1_DESCRIBE_STYLE="contains"
+export GIT_PS1_HIDE_IF_PWD_IGNORED=1
 
-# export PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \w\a\]$PS1"
-PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+dist_version=$(lsb_release -a 2>&1 | \
+		   tr '[:upper:]' '[:lower:]' \
+		   | grep -E 'codename' | cut -d ':' -f 2 | tr -d '[:space:]')
+lsb_dist=$(lsb_release -a 2>&1 | \
+	       tr '[:upper:]' '[:lower:]' | \
+	       grep -E 'id' | cut -d ':' -f 2 | tr -d '[:space:]')
+
+PROMPT_COLOR=
+case "$(uname -m)-$lsb_dist-$dist_version" in
+    "x86_64-centos-6")
+	PROMPT_COLOR="\033[01;31m"
+	;;
+    "x86_64-centos-7")
+	PROMPT_COLOR="\033[00;31m"
+	;;
+    "x86_64-debian-stretch")
+	PROMPT_COLOR="\033[00;32m"
+	;;
+    "s390x-ubuntu-bionic")
+	PROMPT_COLOR="\033[00;33m"
+	;;
+    "x86_64-debian-jessie")
+	PROMPT_COLOR="\033[00;34m"
+	;;
+    "x86_64-debian-stretch")
+	PROMPT_COLOR="\033[00;35m"
+	;;
+    "x86_64-fedora-28")
+	PROMPT_COLOR="\033[00;36m"
+	;;
+esac
+
+PROMPT_COMMAND='__git_ps1 "$PROMPT_COLOR@\h:\w\033[00m" "\\\$ "'
 
 if [ -f ~/.bash_env ]; then
     . ~/.bash_env
@@ -82,7 +112,8 @@ fi
 . /usr/share/bash-completion/bash_completion
 . /usr/share/bash-completion/*
 
-# remap keybaord, caps lock fucks me.
-setxkbmap -option caps:ctrl_modifier
-
-load_sshagent 2 >/dev/null
+xkbmap=$(which xkbmap)
+if [ -f "$xkbmap" ]; then
+    # remap keybaord, caps lock fucks me.
+    setxkbmap -option caps:ctrl_modifier
+fi
