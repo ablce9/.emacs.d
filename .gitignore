@@ -8,3 +8,7 @@ elpa
 *.tar.gz
 *.tar.bz2
 recentfac-comphist.dat
+install/
+recentf
+scripts/
+tutorial/

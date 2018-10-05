@@ -99,7 +99,7 @@ case "$(uname -m)-$lsb_dist-$dist_version" in
 	;;
 esac
 
-PROMPT_COMMAND='__git_ps1 "$PROMPT_COLOR@\h:\w\033[00m" "\\\$ "'
+PROMPT_COMMAND='__git_ps1 "$PROMPT_COLOR\u@\h:\w\033[00m" "\\\$ "'
 
 if [ -f ~/.bash_env ]; then
     . ~/.bash_env
