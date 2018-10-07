@@ -59,7 +59,7 @@ base_min() {
 	xcompmgr \
 	xz-utils \
 	zip \
-	psmics \
+	# psmics \
 	netcat-openbsd \
 	--no-install-recommends
 
@@ -189,6 +189,8 @@ install_docker() {
 # apt for debian9.
 setup_apt()
 {
+    base_min
+
     apt update
     apt install -y \
 	apt-transport-https \
@@ -218,8 +220,8 @@ setup_apt()
 	deb http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 	deb-src http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 
-	deb http://security.debian.org/ stretch/updates main contrib non-free
-	deb-src http://security.debian.org/ stretch/updates main contrib non-free
+	# deb http://security.debian.org/ stretch/updates main contrib non-free
+	# deb-src http://security.debian.org/ stretch/updates main contrib non-free
 
 	#deb http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
 	#deb-src http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
@@ -304,7 +306,7 @@ main()
 	    install_scripts
 	    ;;
 	"install_golang")
-	    install_golang
+	    install_golang "$2"
 	    ;;
 	"install_docker")
 	    install_docker

@@ -49,6 +49,7 @@ shopt -u shift_verbose		 2>/dev/null
 shopt -s sourcepath		 2>/dev/null
 shopt -u xpg_echo                2>/dev/null
 
+
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -109,8 +110,11 @@ fi
 . /usr/share/bash-completion/bash_completion
 . /usr/share/bash-completion/*
 
-xkbmap=$(which xkbmap)
+xkbmap=$(which setxkbmap)
 if [ -f "$xkbmap" ]; then
     # remap keybaord, caps lock fucks me.
     setxkbmap -option caps:ctrl_modifier
 fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

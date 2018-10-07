@@ -73,7 +73,7 @@
 
 (setq web-mode-content-types-alist
   '(("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
-(setq web-mode-code-indent-offset 4)
+(setq web-mode-code-indent-offset 2)
 
 ;; eslint loading from node_modules/eslint/bin/eslint
 ;; https://emacs.stackexchange.com/questions/21205/flycheck-with-file-relative-eslint-executable

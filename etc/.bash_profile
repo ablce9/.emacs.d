@@ -52,3 +52,5 @@ shopt -s sourcepath		 2>/dev/null
 shopt -u xpg_echo                2>/dev/null
 
 . ~/.bashrc
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
