@@ -59,6 +59,8 @@ base_min() {
 	xcompmgr \
 	xz-utils \
 	zip \
+	psmics \
+	netcat-openbsd \
 	--no-install-recommends
 
     apt autoremove

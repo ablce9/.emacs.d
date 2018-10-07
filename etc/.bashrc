@@ -82,9 +82,6 @@ case "$(uname -m)-$lsb_dist-$dist_version" in
     "x86_64-centos-7")
 	PROMPT_COLOR="\033[00;31m"
 	;;
-    "x86_64-debian-stretch")
-	PROMPT_COLOR="\033[00;32m"
-	;;
     "s390x-ubuntu-bionic")
 	PROMPT_COLOR="\033[00;33m"
 	;;
