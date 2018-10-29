@@ -35,15 +35,15 @@
 (require 'helm-config)
 (setq helm-candidate-number-limit 100)
 
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-h C-m") 'helm-mini)
-(global-set-key (kbd "C-h C-b") 'helm-buffers-list)
-(global-set-key (kbd "C-h C-a") 'helm-apropos)
-
-(global-set-key (kbd "C-c t")   'beginning-of-buffer)
-(global-set-key (kbd "C-c r")   'end-of-buffer)
-
-(global-auto-complete-mode 1)
+(progn
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-h C-m") 'helm-mini)
+  (global-set-key (kbd "C-h C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-h C-a") 'helm-apropos)
+  (global-set-key (kbd "C-c t")   'beginning-of-buffer)
+  (global-set-key (kbd "C-c r")   'end-of-buffer)
+  (global-auto-complete-mode 1)
+  (global-auto-revert-mode 1))
 
 ;; disable auto-loading
 (require 'flycheck)
@@ -52,6 +52,9 @@
 		      '(javascript-jshint)
 		      '(json-jsonlist)))
 (flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; flycheck prefix
+(setq-default flycheck-temp-prefix "~/.backups/.flycheck")
 
 (add-hook 'web-mode-hook (lambda ()
 			   (setq indent-tabs-mode nil)
@@ -63,13 +66,6 @@
 (add-hook 'js-jsx-mode (lambda ()
 			 (setq js-indent-level 4)
 			 (setq indent-tabs-mode nil)))
-
-;; flycheck prefix
-(setq-default flycheck-temp-prefix "~/.backups/.flycheck")
-
-;; domain-specific problem on MacOS
-(when (memq window-system '(mac nc))
-  (exec-path-from-shell-initialize))
 
 (setq web-mode-content-types-alist
   '(("jsx"  . "/some/react/path/.*\\.js[x]?\\'")))
@@ -138,8 +134,7 @@
 (put 'upcase-region 'disabled nil)
 
 (defvar linum-format
-  (setq linum-format "%3d \u2502")
-  )
+  (setq linum-format "%3d \u2502"))
 (line-number-mode)
 (global-linum-mode 1)
 (setq column-number-mode t)
@@ -155,7 +150,7 @@
 (setq history-length t)
 (setq history-delete-duplicates t)
 
-; theme
+;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'jqg t)
 
@@ -251,11 +246,16 @@ to make multiple eshell windows easier."
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 
 (require 'go-mode)
-(add-to-list 'auto-mode-alist '("\\.go" . go-mode))
+(add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
 
 (load-file "~/.emacs.d/yaml-mode.el")
 
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
+(add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
+
+(add-to-list 'load-path "~/.emacs.d/rust-mode/")
+(autoload 'rust-mode "rust-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 ;;; init.el ends here
