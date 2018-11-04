@@ -33,3 +33,10 @@ export ANSIBLE_INVENTORY=~/.ansible/hosts
 export CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome_sandbox
 
 export GPG_TTY=$(tty)
+
+export rvm_source_path="${rvm_path}/src"
+export rvm_path="$HOME/.rvm"
+export rvm_log_path="${rvm_path}/log"
+export rvm_bin_path="${rvm_path}/bin"
+export rvm_gems_path="$rvm_path/gems"
+export rvm_scripts_path="${rvm_path}/scripts"

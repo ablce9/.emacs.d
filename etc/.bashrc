@@ -68,36 +68,36 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_DESCRIBE_STYLE="contains"
 export GIT_PS1_HIDE_IF_PWD_IGNORED=1
 
-dist_version=$(lsb_release -a 2>&1 | \
-		   tr '[:upper:]' '[:lower:]' \
-		   | grep -E 'codename' | cut -d ':' -f 2 | tr -d '[:space:]')
-lsb_dist=$(lsb_release -a 2>&1 | \
-	       tr '[:upper:]' '[:lower:]' | \
-	       grep -E 'id' | cut -d ':' -f 2 | tr -d '[:space:]')
+# dist_version=$(lsb_release -a 2>&1 | \
+#		   tr '[:upper:]' '[:lower:]' \
+#		   | grep -E 'codename' | cut -d ':' -f 2 | tr -d '[:space:]')
+# lsb_dist=$(lsb_release -a 2>&1 | \
+#	       tr '[:upper:]' '[:lower:]' | \
+#	       grep -E 'id' | cut -d ':' -f 2 | tr -d '[:space:]')
+#
+# PROMPT_COLOR=
+# case "$(uname -m)-$lsb_dist-$dist_version" in
+#     "x86_64-centos-6")
+#	PROMPT_COLOR="\033[01;31m"
+#	;;
+#     "x86_64-centos-7")
+#	PROMPT_COLOR="\033[00;31m"
+#	;;
+#     "s390x-ubuntu-bionic")
+#	PROMPT_COLOR="\033[00;33m"
+#	;;
+#     "x86_64-debian-jessie")
+#	PROMPT_COLOR="\033[00;34m"
+#	;;
+#     "x86_64-debian-stretch")
+#	PROMPT_COLOR="\033[00;35m"
+#	;;
+#     "x86_64-fedora-28")
+#	PROMPT_COLOR="\033[00;36m"
+#	;;
+# esac
 
-PROMPT_COLOR=
-case "$(uname -m)-$lsb_dist-$dist_version" in
-    "x86_64-centos-6")
-	PROMPT_COLOR="\033[01;31m"
-	;;
-    "x86_64-centos-7")
-	PROMPT_COLOR="\033[00;31m"
-	;;
-    "s390x-ubuntu-bionic")
-	PROMPT_COLOR="\033[00;33m"
-	;;
-    "x86_64-debian-jessie")
-	PROMPT_COLOR="\033[00;34m"
-	;;
-    "x86_64-debian-stretch")
-	PROMPT_COLOR="\033[00;35m"
-	;;
-    "x86_64-fedora-28")
-	PROMPT_COLOR="\033[00;36m"
-	;;
-esac
-
-PROMPT_COMMAND='__git_ps1 "$PROMPT_COLOR\u@\h:\w\033[00m" "\\\$ "'
+PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
 
 if [ -f ~/.bash_env ]; then
     . ~/.bash_env
