@@ -146,6 +146,8 @@ to make multiple eshell windows easier."
     (eshell-send-input)))
 (global-set-key (kbd "C-c e") 'eshell-here)
 (global-set-key (kbd "C-x g") 'goto-line)
+(global-set-key (kbd "C-c s") 'shell-script-mode)
+
 (add-to-list 'default-frame-alist '(font "Monospace-8"))
 (defun eshell/x ()
   "Exit eshell."

@@ -79,7 +79,7 @@ uuid4()
 # % foo\ doo\ \[s3x01\]\ bar.avi
 escape_safe()
 {
-    sed -e 's/ /\\ /g; s/\[/\\[/g; s/\]/\\]/g; s/\?/\\?/g;'
+    sed -e 's/(/\\(/g; s/)/\\)/g; s/ /\\ /g; s/\[/\\[/g; s/\]/\\]/g; s/\?/\\?/g; '
 }
 
 load_sshagent ()
