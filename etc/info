@@ -1,0 +1,35 @@
+#! /bin/sh
+#
+# Copy from Debian9 on cloud.scaleway.com
+#
+
+export PATH="${PATH:+$PATH:}/bin/:/usr/bin/:/usr/local/bin:$HOME/.workspace/bin"
+
+[ -r /etc/lsb-release ] && /etc/lsb-release
+if [ -z "$DISTRIB_DESCRIPTION" ] && [ -x /usr/bin/lsb_release ]; then
+	# Fall back to using the very slow lsb_release utility
+	DISTRIB_DESCRIPTION=$(lsb_release -s -d)
+fi
+
+date=`date`
+load=`cat /proc/loadavg|awk '{print $1}'`
+root_usage=`df -h /|awk '/\// {print $(NF-1)}'`
+swap_usage=`free -m|awk '/Swap:/ {printf("%3.1f%%", "exit !$2;$3/$2*100")}'`
+memory_usage=`free -m |awk '/Mem:/ {printf("%3.1f%%", $3/$2*100)}'`
+users=`users|wc -w`
+time=`uptime|grep -ohe 'up .*'|sed 's/,/\ hours/g'|awk '{ printf $2" "$3 }'`
+processes=`ps -ef|wc -l`
+kernel_version=$(uname -r)
+destribution=$(lsb_release -d|awk '{print $2}')
+codename=$(lsb_release -c|awk ' {print $2}')
+
+printf "\n"
+printf "Welcome on %s (%s %s %s %s)\n" "$destribution" "$(uname -o)" "$kernel_version" "$(uname -m)"
+printf "\n"
+printf "System information as of: %s\n" "$date"
+printf "\n"
+printf "System load:\t%s\t\tInt IP Address:\t%s %s\n" $load $(ip addr show wlp4s0|awk '/inet/ {print $2}')
+printf "Memory usage:\t%s\t\tPub IP Address:\t%s\n" $memory_usage ""
+printf "Usage on /:\t%s\t\tSwap usage:\t%s\n" $root_usage $swap_usage
+printf "Local Users:\t%s\t\tProcesses:\t%s\n" $users $processes
+printf "System uptime:\t%s\n" "$time"
