@@ -6,7 +6,7 @@ export LANG=en_US.UTF-8
 ### GOLANG
 export GOROOT="/usr/local/go"
 export GOPATH="$HOME/.workspace"
-export GOBIN="$GOPATH/bin"
+export GOBIN=$GOPATH/bin:$GOPATH/sbin
 export PATH="$PATH:$GOBIN"
 export PATH=$PATH:$GOBIN
 
@@ -40,3 +40,6 @@ export rvm_log_path="${rvm_path}/log"
 export rvm_bin_path="${rvm_path}/bin"
 export rvm_gems_path="$rvm_path/gems"
 export rvm_scripts_path="${rvm_path}/scripts"
+
+# For custom binaries
+export PATH=$PATH:$HOME/.usr/bin:$HOME/.usr/sbin
