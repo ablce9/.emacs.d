@@ -97,7 +97,7 @@ alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v exten
 alias afk="i3lock -c 000000"
 
 # vhosts
-alias hosts='sudo vim /etc/hosts'
+alias hosts='sudo emacs /etc/hosts'
 
 # copy working directory
 alias cwd='pwd | tr -d "\r\n" | xclip -selection clipboard'
@@ -125,7 +125,6 @@ alias rsync='rsync -avz --progress'
 alias gst='git status'
 alias amend='git commit --amend --no-edit'
 alias gdiff='git-icdiff'
-alias home='cd ~/.workspace/src/github.com/lusunn/'
 
 # some more ls aliases
 alias ll='ls -alF'
