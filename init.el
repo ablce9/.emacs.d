@@ -26,6 +26,8 @@
    web-mode
    elpy
    exec-path-from-shell
+   rubocop
+   ruby-electric
    )
  )
 (require 'helm)
@@ -59,6 +61,8 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook
 	  #'load-eslint-from-node_modules)
+(add-hook 'ruby-mode-hook #'rubocop-mode)
+(add-hook 'ruby-mode-hook #'ruby-electric-mode)
 
 ;; magit
 (require 'magit)
@@ -212,6 +216,8 @@ to make multiple eshell windows easier."
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
 
 (require 'go-mode)
 (add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
@@ -223,3 +229,17 @@ to make multiple eshell windows easier."
 (autoload 'rust-mode "rust-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ruby-electric web-mode rubocop magit helm go-mode flycheck exec-path-from-shell elpy auto-complete))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

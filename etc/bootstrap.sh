@@ -1,79 +1,21 @@
 #! /bin/bash
 
-set -e
+set -xe
 
 PROJECT_ROOT=$(dirname "${BASH_SOURCE}")
-DOT_FILES=(
-    .aliases .bash_profile .bashrc .functions .gdbinit .gitconfig
-    .git-prompt.sh .pep.cfg
+DOT_FILES=(.aliases .bash_profile .bashrc .functions .gdbinit .gitconfig .git-prompt.sh .pep.cfg
 )
 
 base_min() {
-    apt update
-    apt -y upgrade
-
-    apt install -y \
-	adduser \
-	automake \
-	bash-completion \
-	bc \
-	bzip2 \
-	ca-certificates \
-	coreutils \
-	curl \
-	dnsutils \
-	file \
-	findutils \
-	gcc \
-	git \
-	gnupg \
-	gnupg2 \
-	gnupg-agent \
-	grep \
-	gzip \
-	hostname \
-	indent \
-	iptables \
-	jq \
-	less \
-	libc6-dev \
-	libimobiledevice6 \
-	locales \
-	lsof \
-	make \
-	mount \
-	net-tools \
-	pinentry-curses \
-	rxvt-unicode-256color \
-	scdaemon \
-	silversearcher-ag \
-	ssh \
-	strace \
-	sudo \
-	tar \
-	tree \
-	tzdata \
-	usbmuxd \
-	unzip \
-	xclip \
-	xcompmgr \
-	xz-utils \
-	zip \
-	netcat-openbsd \
-	--no-install-recommends
-
-    apt autoremove
-    apt autoclean
-    apt clean
-
+    apt update;apt -y upgrade;apt install -y adduser automake bash-completion bc bzip2 ca-certificates coreutils curl dnsutils file findutils gcc	git gnupg gnupg2 gnupg-agent grep gzip hostname indent iptables jq less libc6-dev libimobiledevice6 locales lsof make mount net-tools pinentry-curses rxvt-unicode-256color scdaemon silversearcher-ag ssh strace	sudo tar tree tzdata usbmuxd unzip xclip xcompmgr xz-utils zip netcat-openbsd --no-install-recommends;apt autoremove;apt autoclean;apt clean
 }
 
 # install/update golang from source
 install_golang() {
-    USER="$@"
+    local user="$1"
 
-    if [ -z "$USER" ]; then
-	echo "Need username. $USER"
+    if [ -z $user ]; then
+	echo "Need username. $user"
 	exit 1
     fi
 
@@ -98,7 +40,6 @@ install_golang() {
     (
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
 	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
-	local user="$USER"
 	# rebuild stdlib for faster builds
 	sudo chown -R "${user}" /usr/local/go/pkg
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
@@ -131,9 +72,9 @@ install_scripts() {
 }
 
 install_docker() {
-    USER="$@"
+    local user="$@"
 
-    if [ -z "$USER" ]; then
+    if [ -z $user ]; then
 	echo "Need username. $USER"
 	exit 1
     fi
@@ -233,9 +174,9 @@ setup_apt()
 # Careful here. This could mess with sudo command.
 setup_sudo()
 {
-    user="$@"
+    local user="$1"
 
-    if [ -z "$user" ]; then
+    if [ -z $user ]; then
 	echo "Need username. $user"
 	exit 1
     fi
