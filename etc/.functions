@@ -87,3 +87,5 @@ load_sshagent ()
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/id_rsa
 }
+
+alias e='emacs ~/.emacs.d/init.el'
