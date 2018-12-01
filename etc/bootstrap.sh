@@ -115,15 +115,11 @@ install_docker() {
 	docker -v
     )
     chmod +x /usr/local/bin/docker*
-
+    curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.service > /etc/systemd/system/docker.service
+    curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.socket > /etc/systemd/system/docker.socket
     systemctl daemon-reload
     systemctl enable docker
-
-    # update grub with docker configs and power-saving items
-    sed -i.bak 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor page_poison=1 slab_nomerge vsyscall=none"/g' /etc/default/grub
-    echo "Docker has been installed. If you want memory management & swap"
-    echo "run update-grub & reboot"
-
+    echo 'done'
 }
 
 # apt for debian9.
