@@ -39,15 +39,15 @@ setup_wg () {
 
 if [[ -z "$1" ]]; then
     echo "usage: "
-    echo "  setup_wg [default-route]"
-    echo "  set_wg_down"
+    echo "  up [default-route]"
+    echo "  down"
 fi
 
 case "$1" in
-    "setup_wg")
+    "up")
 	setup_wg "$2"
 	;;
-    "set_wg_down")
+    "down")
 	set_wg_down
 	;;
 esac
