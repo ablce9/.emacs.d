@@ -109,6 +109,20 @@ install_docker() {
     systemctl start docker.socket;systemctl start docker.service;systemctl status docker
 }
 
+install_wireguard ()
+{
+    local user="$1"
+    if [ -z $user ]; then
+	echo "Need a username."
+	exit 1
+    fi
+    (set e; test -d /usr/src/linux-headers-$(uname -r)||echo "need linux header")
+    sudo apt-get install libmnl-dev libelf-dev pkg-config --no-install-recommends -y
+    sudo mkdir /opt/wireguard && cd /opt/wireguard && sudo chown "$user:$user" /opt/wireguard;
+    wget https://git.zx2c4.com/WireGuard/snapshot/WireGuard-0.0.20181119.tar.xz && \
+	tar xvf WireGuard-0.0.20181119.tar.xz && rm ./WireGuard-0.0.20181119.tar
+}
+
 setup_apt()
 {
     base_min
@@ -129,11 +143,11 @@ setup_apt()
 	deb http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 	deb-src http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 
-	#deb http://security.debian.org/ stretch/updates main contrib non-free
-	#deb-src http://security.debian.org/ stretch/updates main contrib non-free
+	deb http://security.debian.org/ stretch/updates main contrib non-free
+	deb-src http://security.debian.org/ stretch/updates main contrib non-free
 
-	#deb http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
-	#deb-src http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
+	deb http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
+	deb-src http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
 	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
@@ -179,6 +193,7 @@ usage()
     echo " install_scripts   install useful scripts"
     echo " install_golang    install_golang \$user"
     echo " install_docker    install_docker \$user"
+    echo " install_wireguard install Wireguard as it says"
     exit 1
 }
 
@@ -208,6 +223,12 @@ main()
 	    ;;
 	"install_docker")
 	    install_docker "$2"
+	    ;;
+	"install_wireguard")
+	    install_wireguard "$2"
+	    ;;
+	"username")
+	    check_username "$2"
 	    ;;
     esac
 }
