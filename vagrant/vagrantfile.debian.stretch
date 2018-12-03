@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = 'debian/stretch64'
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024*4
+    v.cpus = 4
+  end
+  config.ssh.forward_agent = true
+  config.vm.network "private_network", ip: "192.168.10.2"
+  # Debian basic
+  config.vm.provision :shell, inline: <<EOF
+        apt-get update&&apt-get upgrade -y;apt-get install -y apt-get-transport-https;ca-certificates;curl;lsb-release;--no-install-recommends;apt-get install -y automake bash-completion bc bzip2 ca-certificates coreutils curl dnsutils findutils gcc git gnupg gnupg2 gnupg-agent grep gzip hostname indent iptables jq less libc6-dev libimobiledevice6 locales lsof make mount net-tools pinentry-curses rxvt-unicode-256color scdaemon silversearcher-ag ssh strace tree tzdata usbmuxd unzip xz-utils apparmor bridge-utils cgroupfs-mount libapparmor-dev libltdl-dev libseccomp-dev network-manager s3cmd build-essential rpm ninja-build libncurses-dev libssl-dev emacs25-nox --no-install-recommends;apt-get autoremove;apt-get autoclean;apt-get clean
+EOF
+  # Emacs and others
+  config.vm.provision :shell, inline: <<EOF
+git clone https://github.com/ablce9/.emacs.d /home/vagrant/.emacs.d;chown -R vagrant:vagrant /home/vagrant/.emacs.d
+wget -O/etc/update-motd.d/info https://raw.githubusercontent.com/ablce9/.emacs.d/master/etc/info
+EOF
+
+  # Docker
+  config.vm.provision :shell, inline: <<EOF
+echo "deb https://apt-get.dockerproject.org/repo debian-stretch main
+deb https://apt-get.dockerproject.org/repo debian-stretch testing
+deb https://apt-get.dockerproject.org/repo debian-stretch experimental" 2>&1|tee /etc/apt/sources.list.d/docker.list
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+groupadd docker;gpasswd -a vagrant docker;
+mkdir -p /etc/bash_completion.d;curl -sSL -o /etc/bash_completion.d/docker https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker
+tmp_tar=/tmp/docker.tgz;binary_uri="https://download.docker.com/linux/static/edge/x86_64";docker_version
+docker_version=$(curl -sSL "https://api.github.com/repos/docker/docker-ce/releases/latest" |jq --raw-output .tag_name)
+docker_version=${docker_version#v}
+docker_sha256;docker_sha256=$(curl -sSL "${binary_uri}/docker-${docker_version}.tgz.sha256" |awk '{print $1}')
+(
+    set -x
+    curl -fSL "${binary_uri}/docker-${docker_version}.tgz" -o "${tmp_tar}"
+    echo "${docker_sha256} ${tmp_tar}" |sha256sum -c -
+    tar -C /usr/local/bin --strip-components 1 -xzvf "${tmp_tar}"
+    rm "${tmp_tar}"
+)
+chmod +x /usr/local/bin/docker*
+curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.service > /etc/systemd/system/docker.service
+curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.socket > /etc/systemd/system/docker.socket
+systemctl daemon-reload;systemctl enable docker.service;systemctl enable docker.socket
+systemctl start docker.socket;systemctl start docker.service;systemctl status docker.service
+echo `date`|tee -a $HOME/build
+EOF
+end
