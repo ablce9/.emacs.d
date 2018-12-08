@@ -175,7 +175,7 @@ setup_sudo()
 install_dotfiles()
 {
     for file in "${DOT_FILES[@]}"; do
-	cp -f "${PROJECT_ROOT}/$file" ~
+	ln -f "${PROJECT_ROOT}/$file" ~
     done
     if [[ -f "/usr/lib/git-core/git-sh-prompt" ]]; then
 	echo "cp /usr/lib/git-core/git-sh-prompt"
