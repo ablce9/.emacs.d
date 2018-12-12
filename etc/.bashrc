@@ -50,11 +50,6 @@ shopt -s sourcepath		 2>/dev/null
 shopt -u xpg_echo                2>/dev/null
 
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # unlimited size
 HISTSIZE=-1
 HISTFILESIZE=-1
@@ -68,6 +63,11 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_PS1_DESCRIBE_STYLE="contains"
 export GIT_PS1_HIDE_IF_PWD_IGNORED=1
 
+# Colour thingy; use 'em when feel like colour thingy...
+# set variable identifying the chroot you work in (used in the prompt below)
+# if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+#     debian_chroot=$(cat /etc/debian_chroot)
+# fi
 # dist_version=$(lsb_release -a 2>&1 | \
 #		   tr '[:upper:]' '[:lower:]' \
 #		   | grep -E 'codename' | cut -d ':' -f 2 | tr -d '[:space:]')
@@ -106,9 +106,9 @@ fi
 . ~/.functions
 . ~/.aliases
 
-# bash completion
-. /usr/share/bash-completion/bash_completion
-. /usr/share/bash-completion/*
+if [ -d "/usr/share/bash-completion/" ]; then
+    . /usr/share/bash-completion/*
+fi
 
 xkbmap=$(which setxkbmap)
 if [ -f "$xkbmap" ]; then
