@@ -1,8 +1,12 @@
 #! /bin/bash
 set -xe
 PROJECT_ROOT=$(dirname "${BASH_SOURCE}")
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# @@@@@@@@@@@@@@@@@@@@@ DO NOT ADD .bash_env @@@@@@@@@@@@@@@@@@@@@@@@@
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 DOT_FILES=(.aliases .bash_profile .bashrc .functions \
 		    .gdbinit .gitconfig .git-prompt.sh .pep.cfg)
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 base_min() {
     apt-get update&&apt-get -y upgrade
@@ -175,7 +179,7 @@ setup_sudo()
 install_dotfiles()
 {
     for file in "${DOT_FILES[@]}"; do
-	ln -f "${PROJECT_ROOT}/$file" ~
+	 -f "${PROJECT_ROOT}/$file" ~
     done
     if [[ -f "/usr/lib/git-core/git-sh-prompt" ]]; then
 	echo "cp /usr/lib/git-core/git-sh-prompt"
