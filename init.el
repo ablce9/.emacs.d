@@ -152,6 +152,7 @@ to make multiple eshell windows easier."
 (global-set-key (kbd "C-c e") 'eshell-here)
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell-script-mode)
+(global-set-key (kbd "C-c m") 'set-mark-command)
 
 (add-to-list 'default-frame-alist '(font "Monospace-8"))
 (defun eshell/x ()

@@ -47,7 +47,7 @@ install_golang() {
     GO_VERSION=${GO_VERSION#go}
     (
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
-	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
+	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -x # z
 	sudo chown -R "${user}" /usr/local/go/pkg
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
     )
