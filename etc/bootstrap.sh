@@ -124,7 +124,7 @@ install_wireguard ()
     sudo apt-get install libmnl-dev libelf-dev pkg-config --no-install-recommends -y
     sudo mkdir /opt/wireguard && cd /opt/wireguard && sudo chown "$user:$user" /opt/wireguard;
     wget https://git.zx2c4.com/WireGuard/snapshot/WireGuard-0.0.20181119.tar.xz && \
-	tar xvf WireGuard-0.0.20181119.tar.xz && rm ./WireGuard-0.0.20181119.tar
+	unxz WireGuard-0.0.20181119.tar.xz && tar xvf ./WireGuard-0.0.20181119.tar && rm WireGuard-0.0.20181119.tar
 }
 
 setup_apt()
@@ -142,20 +142,21 @@ setup_apt()
     echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/99translations
     cat <<-EOF > /etc/apt/sources.list
 	deb http://httpredir.debian.org/debian stretch main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ stretch main contrib non-free
+	# deb-src http://httpredir.debian.org/debian/ stretch main contrib non-free
 
 	deb http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
+	# deb-src http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 
 	deb http://security.debian.org/ stretch/updates main contrib non-free
-	deb-src http://security.debian.org/ stretch/updates main contrib non-free
-
-	deb http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ jessie-backports main contrib non-free
+	# deb-src http://security.debian.org/ stretch/updates main contrib non-free
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
-	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
+	# deb-src http://httpredir.debian.org/debian experimental main contrib non-free
+
+	deb http://ftp.debian.org/debian stretch-backports main
 	EOF
+    apt-get update;apt-get -t stretch-backports upgrade
+    # And do whatever you want... like installing the latest kernel!
 }
 
 setup_sudo()
