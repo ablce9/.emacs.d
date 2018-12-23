@@ -5,7 +5,7 @@
 
 (require 'package)
 (add-to-list 'package-archives
-             '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
+	     '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
 (package-initialize)
 (if (not
      (fboundp 'flycheck-mode))
@@ -46,22 +46,22 @@
 ;; disable auto-loading
 (require 'flycheck)
 (setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(javascript-jshint)
-                      '(json-jsonlist)))
+	      (append flycheck-disabled-checkers
+		      '(javascript-jshint)
+		      '(json-jsonlist)))
 (flycheck-add-mode 'javascript-eslint 'web-mode)
 ;; flycheck prefix
 (setq-default flycheck-temp-prefix "~/.backups/.flycheck")
 (add-hook 'web-mode-hook (lambda ()
-                           (setq indent-tabs-mode nil)
-                           (setq web-mode-css-indent-offset 4)))
+			   (setq indent-tabs-mode nil)
+			   (setq web-mode-css-indent-offset 4)))
 
 ;; hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook
-          #'load-eslint-from-node_modules)
+	  #'load-eslint-from-node_modules)
 (add-hook 'ruby-mode-hook #'rubocop-mode)
 (add-hook 'ruby-mode-hook #'ruby-electric-mode)
 
@@ -69,20 +69,20 @@
 (require 'magit)
 (global-set-key (kbd "C-c p") 'magit-status)
 (global-set-key (kbd "C-c i")
-                (lambda() (interactive) (load-file "~/.emacs.d/init.el")))
+		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
 (define-key global-map (kbd "C-c g") 'magit-status)
 
 (defun search (item)
   "Quick search :ITEM."
   (interactive "sitem: ")
   (shell-command(shell-command-to-string
-                 (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
+		 (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
 (defun json-format ()
   "The go-format for json."
   (interactive)
   (shell-command-on-region (point-min) (point-max)
-                           "python -mjson.tool"
-                           (current-buffer) t))
+			   "python -mjson.tool"
+			   (current-buffer) t))
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
 ;; elpy
@@ -106,6 +106,15 @@
 (setq history-length t)
 (setq history-delete-duplicates t)
 
+;; load-path
+(defun  load-directory (dir)
+  (let ((loading (lambda (f)
+		   (load-file (concat (file-name-as-directory dir) f)))))
+    (mapc loading (directory-files dir nil "\\.el$"))))
+(load-directory "~/.emacs.d/vendor/")
+(load-directory "/usr/share/emacs/site-lisp/")
+(load-directory "~/.emacs.d/elpa/")
+
 ;; theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'jqg t)
@@ -124,10 +133,10 @@
   "A macro lets you open windows nice"
   (interactive)
   (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name))
-                   default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
+		     (file-name-directory (buffer-file-name))
+		   default-directory))
+	 (height (/ (window-total-height) 3))
+	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)))
 (global-set-key (kbd "C-c o") 'open-nice)
@@ -138,10 +147,10 @@ current buffer's file. The eshell is renamed to match that directory
 to make multiple eshell windows easier."
   (interactive)
   (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name))
-                   default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
+		     (file-name-directory (buffer-file-name))
+		   default-directory))
+	 (height (/ (window-total-height) 3))
+	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)
     (eshell "new")
@@ -165,40 +174,40 @@ to make multiple eshell windows easier."
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces :IGNORED."
   (let* ((anchor (c-langelem-pos c-syntactic-element))
-         (column (c-langelem-2nd-pos c-syntactic-element))
-         (offset (- (1+ column) anchor))
-         (steps (floor offset c-basic-offset)))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
     (* (max steps 1)
        c-basic-offset)))
 (add-hook 'c-mode-common-hook
-          (lambda ()
-            ;; Add kernel style
-            (c-add-style
-             "linux-tabs-only"
-             '("linux" (c-offsets-alist
-                        (arglist-cont-nonempty
-                         c-lineup-gcc-asm-reg
-                         c-lineup-arglist-tabs-only))))))
+	  (lambda ()
+	    ;; Add kernel style
+	    (c-add-style
+	     "linux-tabs-only"
+	     '("linux" (c-offsets-alist
+			(arglist-cont-nonempty
+			 c-lineup-gcc-asm-reg
+			 c-lineup-arglist-tabs-only))))))
 (add-hook 'c-mode-hook
-          (lambda ()
-            (let ((filename (buffer-file-name)))
-              ;; Enable kernel mode for the appropriate files
-              (when (and filename
-                         (string-match (expand-file-name "~/src/linux-trees")
-                                       filename))
-                (setq indent-tabs-mode t)
-                (setq show-trailing-whitespace t)
-                (c-set-style "linux-tabs-only")))))
+	  (lambda ()
+	    (let ((filename (buffer-file-name)))
+	      ;; Enable kernel mode for the appropriate files
+	      (when (and filename
+			 (string-match (expand-file-name "~/src/linux-trees")
+				       filename))
+		(setq indent-tabs-mode t)
+		(setq show-trailing-whitespace t)
+		(c-set-style "linux-tabs-only")))))
 
 ;; javascript FUCKS
 (defun load-eslint-from-node_modules ()
   "Eslint loading from node_modules/eslint/bin/eslint."
   (interactive)
   (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node-module"))
-         (eslint (and root
-                      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
+		(or (buffer-file-name) default-directory)
+		"node-module"))
+	 (eslint (and root
+		      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
     (when (and eslint (file-executeable-p eslint))
       (setq-local flycheck-javascript-eslint-executeable eslint))))
 
@@ -217,9 +226,9 @@ to make multiple eshell windows easier."
 (add-hook 'typescript-mode-hook (setq indent-tabs-mode nil))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-hook 'typescript-mode-hook
-          (lambda ()
-            (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode))))
+	  (lambda ()
+	    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+	      (setup-tide-mode))))
 ;; funky typescript linting in web-mode
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (with-eval-after-load 'tide
@@ -235,10 +244,10 @@ to make multiple eshell windows easier."
 (setq web-mode-enable-auto-pairing t)
 
 (add-hook 'js-jsx-mode (lambda ()
-                         (setq js-indent-level 4)
-                         (setq indent-tabs-mode nil)))
+			 (setq js-indent-level 4)
+			 (setq indent-tabs-mode nil)))
 (add-hook 'typescript-mode (lambda ()
-                         (setq indent-tabs-mode nil)))
+			 (setq indent-tabs-mode nil)))
 
 (setq web-mode-code-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
@@ -249,8 +258,6 @@ to make multiple eshell windows easier."
 
 (require 'go-mode)
 (add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
-(load-file "~/.emacs.d/yaml-mode.el")
-(require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
 (add-to-list 'load-path "~/.emacs.d/rust-mode/")
