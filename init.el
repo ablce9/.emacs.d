@@ -209,4 +209,5 @@ to make multiple eshell windows easier."
 (add-to-list 'load-path "~/.emacs.d/rust-mode/")
 (autoload 'rust-mode "rust-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(add-to-list 'auto-mode-alist '("\\.slim" . slim-mode))
 ;;; init.el ends here
