@@ -3,60 +3,22 @@
 ;;; This is my Emacs config.
 ;;; Code:
 
-(require 'package)
-(add-to-list 'package-archives
-	     '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
+;; hooks
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
 (package-initialize)
-(if (not
-     (fboundp 'flycheck-mode))
-    (package-list-packages)
-  (message "ready for work")
-  )
-;; check if I have favourite packages
-(mapc
- (lambda (package)
-   (unless (package-installed-p package)
-     (package-install package)))
- '(
-   flycheck
-   helm
-   auto-complete
-   go-mode
-   magit
-   web-mode
-   elpy
-   exec-path-from-shell
-   rubocop
-   ruby-electric
-   tide
-   )
- )
-(require 'helm)
-(require 'helm-config)
-(setq helm-candidate-number-limit 100)
+
 (progn
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-h C-m") 'helm-mini)
   (global-set-key (kbd "C-h C-b") 'helm-buffers-list)
   (global-set-key (kbd "C-h C-a") 'helm-apropos)
   (global-set-key (kbd "C-c t")   'beginning-of-buffer)
-  (global-set-key (kbd "C-c r")   'end-of-buffer)
-  (global-auto-complete-mode 1)
-  (global-auto-revert-mode 1))
-;; disable auto-loading
-(require 'flycheck)
-(setq-default flycheck-disabled-checkers
-	      (append flycheck-disabled-checkers
-		      '(javascript-jshint)
-		      '(json-jsonlist)))
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-;; flycheck prefix
-(setq-default flycheck-temp-prefix "~/.backups/.flycheck")
-(add-hook 'web-mode-hook (lambda ()
-			   (setq indent-tabs-mode nil)
-			   (setq web-mode-css-indent-offset 4)))
+  (global-set-key (kbd "C-c r")   'end-of-buffer))
 
-;; hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -64,13 +26,6 @@
 	  #'load-eslint-from-node_modules)
 (add-hook 'ruby-mode-hook #'rubocop-mode)
 (add-hook 'ruby-mode-hook #'ruby-electric-mode)
-
-;; magit
-(require 'magit)
-(global-set-key (kbd "C-c p") 'magit-status)
-(global-set-key (kbd "C-c i")
-		(lambda() (interactive) (load-file "~/.emacs.d/init.el")))
-(define-key global-map (kbd "C-c g") 'magit-status)
 
 (defun search (item)
   "Quick search :ITEM."
@@ -85,11 +40,6 @@
 			   (current-buffer) t))
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
-;; elpy
-;; configure with flake8 https://github.com/jorgenschaefer/elpy/wiki/Configuration
-;; cp pep.cfg $HOME/.config/flake8
-(when (require 'elpy nil t)
-  (elpy-enable))
 
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -240,8 +190,6 @@ to make multiple eshell windows easier."
 (add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
 (add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
 (add-to-list 'flycheck-disabled-checkers 'javascript)
-(setq web-mode-enable-auto-closing t)
-(setq web-mode-enable-auto-pairing t)
 
 (add-hook 'js-jsx-mode (lambda ()
 			 (setq js-indent-level 4)
@@ -255,8 +203,6 @@ to make multiple eshell windows easier."
 (add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
 (add-to-list 'auto-mode-alist '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
 (add-to-list 'auto-mode-alist '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
-
-(require 'go-mode)
 (add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
@@ -264,17 +210,3 @@ to make multiple eshell windows easier."
 (autoload 'rust-mode "rust-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (prettier prettier-js ruby-electric web-mode rubocop magit helm go-mode flycheck exec-path-from-shell elpy auto-complete))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
