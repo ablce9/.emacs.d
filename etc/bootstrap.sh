@@ -1,5 +1,5 @@
 #! /bin/bash
-set -xe
+set -e
 PROJECT_ROOT=$(dirname "${BASH_SOURCE}")
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@@@@@@@@@@@@@@@@@@@ DO NOT ADD .bash_env @@@@@@@@@@@@@@@@@@@@@@@@@
@@ -180,12 +180,17 @@ setup_sudo()
 install_dotfiles()
 {
     for file in "${DOT_FILES[@]}"; do
-	 -f "${PROJECT_ROOT}/$file" ~
+	 cp -f "${PROJECT_ROOT}/$file" ~
     done
     if [[ -f "/usr/lib/git-core/git-sh-prompt" ]]; then
-	echo "cp /usr/lib/git-core/git-sh-prompt"
 	cp -f /usr/lib/git-core/git-sh-prompt ~/.git-prompt.sh
     fi
+
+    # gpg stuff
+    ! test -d $HOME/.gnupg || \
+	for file in ./gpg.conf ./gpg-agent.conf;do
+	    cp -f $file ~/.gnupg
+	done
 }
 
 usage()
