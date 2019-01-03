@@ -105,10 +105,54 @@ install_docker() {
 	rm "${tmp_tar}"
     )
     chmod +x /usr/local/bin/docker*
-    curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.service > \
-	 /etc/systemd/system/docker.service
-    curl -sSL https://raw.githubusercontent.com/jessfraz/dotfiles/master/etc/systemd/system/docker.socket > \
-	 /etc/systemd/system/docker.socket
+    cat <<EOF > /etc/systemd/system/docker.service
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.com
+After=network.target docker.socket firewall.service
+Requires=docker.socket
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/dockerd -D \
+		  -s overlay2 \
+		  -H fd://
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=1048576
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+# Uncomment TasksMax if your systemd version supports it.
+# Only systemd 226 and above support this version.
+#TasksMax=infinity
+TimeoutStartSec=0
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+# restart the docker process if it exits prematurely
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+cat <<EOF > /etc/systemd/system/docker.socket
+[Unit]
+Description=Docker Socket for the API
+PartOf=docker.service
+
+[Socket]
+ListenStream=/var/run/docker.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=docker
+
+[Install]
+WantedBy=sockets.target
+EOF
     systemctl daemon-reload;systemctl enable docker.service;systemctl enable docker.socket;
     systemctl start docker.socket;systemctl start docker.service;systemctl status docker
 }
