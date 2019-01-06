@@ -195,7 +195,7 @@ to make multiple eshell windows easier."
 			 (setq js-indent-level 4)
 			 (setq indent-tabs-mode nil)))
 (add-hook 'typescript-mode (lambda ()
-			 (setq indent-tabs-mode nil)))
+			     (setq indent-tabs-mode nil)))
 
 (setq web-mode-code-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
@@ -206,8 +206,6 @@ to make multiple eshell windows easier."
 (add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
-(add-to-list 'load-path "~/.emacs.d/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (add-to-list 'auto-mode-alist '("\\.slim" . slim-mode))
 ;;; init.el ends here
