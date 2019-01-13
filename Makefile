@@ -1,4 +1,4 @@
-VERSION ?= $(shell git describe 2>&1 |tee >/dev/null|| true)
+VERSION ?= $(shell git describe 2>&1 >/dev/null|| true)
 EMACS_HOME ?= ~/.emacs.d/
 SRC_FILES := elpa vendor ./init.el
 
@@ -9,4 +9,4 @@ build:
 	@ echo "building ... $(VERSION)"
 	$(shell find $(SRC_FILES) $(EMACS_HOME) -name \
 		'*.el' -exec emacs --batch --eval \
-		'(byte-compile-file "{}")' \; 2>&1 |tee >/dev/null)
+		'(byte-compile-file "{}")' \; 2>&1 >/dev/null)
