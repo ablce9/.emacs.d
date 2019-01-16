@@ -33,11 +33,6 @@ base_min() {
 }
 
 install_golang() {
-    local user="$1"
-    if [ -z $user ]; then
-	echo "Need a username."
-	exit 1
-    fi
     export GO_VERSION
     GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
     export GO_SRC=/usr/local/go
@@ -51,8 +46,10 @@ install_golang() {
     GO_VERSION=${GO_VERSION#go}
     (
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
-	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -x # z
-	sudo chown -R "${user}" /usr/local/go/pkg
+	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
+	cp -f /usr/local/go/bin/go     /usr/local/bin
+	cp -f /usr/local/go/bin/gofmt  /usr/local/bin
+	cp -f /usr/local/go/bin/godoc  /usr/local/bin
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
     )
 }
