@@ -1,3 +1,5 @@
+#! /bin/bash
+
 alias grep='egrep --color'
 alias l='ls -al'
 
