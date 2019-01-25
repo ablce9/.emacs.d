@@ -18,6 +18,8 @@
   (global-set-key (kbd "C-h C-a") 'helm-apropos)
   (global-set-key (kbd "C-c t")   'beginning-of-buffer)
   (global-set-key (kbd "C-c r")   'end-of-buffer)
+  (global-set-key (kbd "C-c ]") 'windmove-right)
+  (global-set-key (kbd "C-c [") 'windmove-left)
   (global-set-key (kbd "C-c <up>") 'windmove-up)
   (global-set-key (kbd "C-c <down>") 'windmove-down)
   (global-set-key (kbd "C-c <right>") 'windmove-right)
@@ -27,7 +29,7 @@
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook
-          #'load-eslint-from-node_modules)
+	  #'load-eslint-from-node_modules)
 (add-hook 'ruby-mode-hook #'rubocop-mode)
 (add-hook 'ruby-mode-hook #'ruby-electric-mode)
 
