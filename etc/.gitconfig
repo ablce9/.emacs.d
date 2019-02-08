@@ -1,5 +1,6 @@
 [alias]
 	l = log --pretty=oneline -n20 --graph --abbrev-commit
+	ll = log --graph --oneline --decorate --date-order --color --boundary @{u}
 	s = status -s
 	am = commit --amend --no-edit
 
