@@ -49,6 +49,9 @@
 	# Find tags containing commit
 	ft = "!f() { git describe --always --contains $1; }; f"
 
+	# Find the latest release branch
+	latest = describe --abbrev=0 --tags
+
 	# Find commits by source code
 	fc = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
 
