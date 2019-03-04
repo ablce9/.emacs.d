@@ -91,3 +91,11 @@ load_sshagent ()
 }
 
 alias e='emacs ~/.emacs.d/init.el'
+
+sshy()
+{
+    until ssh "$@" >/dev/null
+    do
+	sleep .2
+    done
+}

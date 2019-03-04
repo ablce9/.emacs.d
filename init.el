@@ -158,6 +158,9 @@ to make multiple eshell windows easier."
                 (setq show-trailing-whitespace t)
                 (c-set-style "linux-tabs-only")))))
 
+;; cc-mode indent
+(setq-default c-basic-offset 4)
+
 ;; javascript FUCKS
 (defun load-eslint-from-node_modules ()
   "Eslint loading from node_modules/eslint/bin/eslint."
