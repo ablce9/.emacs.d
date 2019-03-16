@@ -39,6 +39,8 @@
 (defconst rust-re-vis "pub")
 (defconst rust-re-unsafe "unsafe")
 (defconst rust-re-extern "extern")
+(defconst rust-re-generic
+  (concat "<[[:space:]]*'" rust-re-ident "[[:space:]]*>"))
 (defconst rust-re-union
   (rx-to-string
    `(seq
@@ -125,6 +127,13 @@ Like `looking-back' but for fixed strings rather than regexps (so that it's not 
 (defcustom rust-indent-where-clause nil
   "Indent lines starting with the `where' keyword following a function or trait.
 When nil, `where' will be aligned with `fn' or `trait'."
+  :type 'boolean
+  :group 'rust-mode
+  :safe #'booleanp)
+
+(defcustom rust-indent-return-type-to-arguments t
+  "Indent a line starting with the `->' (RArrow) following a function, aligning
+to the function arguments.  When nil, `->' will be indented one level."
   :type 'boolean
   :group 'rust-mode
   :safe #'booleanp)
@@ -397,8 +406,10 @@ buffer."
                        (back-to-indentation)
                        (current-column))))))
 
-              ;; A function return type is indented to the corresponding function arguments
-              ((looking-at "->")
+              ;; A function return type is indented to the corresponding
+	      ;; function arguments, if -to-arguments is selected.
+              ((and rust-indent-return-type-to-arguments
+		    (looking-at "->"))
                (save-excursion
                  (backward-list)
                  (or (rust-align-to-expr-after-brace)
@@ -561,7 +572,9 @@ buffer."
 (defun rust-re-grab (inner) (concat "\\(" inner "\\)"))
 (defun rust-re-shy (inner) (concat "\\(?:" inner "\\)"))
 (defun rust-re-item-def (itype)
-  (concat (rust-re-word itype) "[[:space:]]+" (rust-re-grab rust-re-ident)))
+  (concat (rust-re-word itype)
+	  (rust-re-shy rust-re-generic) "?"
+	  "[[:space:]]+" (rust-re-grab rust-re-ident)))
 (defun rust-re-item-def-imenu (itype)
   (concat "^[[:space:]]*"
           (rust-re-shy (concat (rust-re-word rust-re-vis) "[[:space:]]+")) "?"
@@ -1497,6 +1510,16 @@ This is written mainly to be used as `end-of-defun-function' for Rust."
   "Compile using `cargo build`"
   (interactive)
   (compile "cargo build"))
+
+(defun rust-run ()
+  "Run using `cargo run`"
+  (interactive)
+  (compile "cargo run"))
+
+(defun rust-test ()
+  "Test using `cargo test`"
+  (interactive)
+  (compile "cargo test"))
 
 (defvar rust-mode-map
   (let ((map (make-sparse-keymap)))

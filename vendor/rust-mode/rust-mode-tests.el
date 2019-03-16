@@ -450,6 +450,17 @@ fn foo4(a:i32,
 }
 "))
 
+(ert-deftest indent-return-type-non-visual ()
+  (let ((rust-indent-return-type-to-arguments nil))
+(test-indent
+   "
+fn imagine_long_enough_to_wrap_at_arrow(a:i32, b:char)
+    -> i32
+{
+    let body;
+}
+")))
+
 (ert-deftest indent-body-after-where ()
   (let ((rust-indent-where-clause t))
     (test-indent
@@ -3060,6 +3071,20 @@ extern \"rust-intrinsic\" fn five() {
       "three"
       "four"
       "five"))))
+
+(ert-deftest rust-test-imenu-impl-with-lifetime ()
+  (test-imenu
+   "
+impl<'a> One<'a> {
+    fn one() {}
+}
+
+impl Two<'a> {
+    fn two() {}
+}
+"
+   '(("Impl" "One" "Two")
+     ("Fn" "one" "two"))))
 
 (when (executable-find rust-cargo-bin)
   (ert-deftest rust-test-project-located ()
