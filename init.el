@@ -18,6 +18,7 @@
   (global-set-key (kbd "C-h C-a") 'helm-apropos)
   (global-set-key (kbd "C-c t")   'beginning-of-buffer)
   (global-set-key (kbd "C-c r")   'end-of-buffer)
+  (global-set-key (kbd "C-c u")   'ispell-region)
   (global-set-key (kbd "C-c ]") 'windmove-right)
   (global-set-key (kbd "C-c [") 'windmove-left)
   (global-set-key (kbd "C-c <up>") 'windmove-up)
