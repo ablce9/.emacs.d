@@ -25,6 +25,7 @@
    rubocop
    ruby-electric
    tide
+   editorconfig
    )
  )
 
@@ -77,8 +78,9 @@
 (global-auto-complete-mode t)
 
 (setq ac-modes '(rust-mode go-mode ruby-mode shell-script-mode
-                           yaml-mode slim-mode web-mode
-                           cperl-mode c-mode))
+			   yaml-mode slim-mode web-mode
+			   cperl-mode c-mode))
+(editorconfig-mode 1)
 
 (provide 'packages)
 ;;; packages.el ends here
