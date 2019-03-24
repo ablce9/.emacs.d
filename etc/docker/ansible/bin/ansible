@@ -1,0 +1,10 @@
+#! /bin/bash
+set -e
+
+main ()
+{
+    args=( "$@" )
+    docker run --rm -it -v $PWD/var/log:/var/log -v $PWD/opt/tasks:/opt/tasks -v $PWD/etc/ansible:/etc/ansible -v $PWD/etc/ansible/ansible.cfg:/etc/ansible/ansible.cfg -v $HOME.ssh:/root/.ssh:ro ansible:latest ansible "${args[@]}"
+}
+
+main "$@"
