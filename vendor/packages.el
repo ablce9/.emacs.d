@@ -82,5 +82,10 @@
 			   cperl-mode c-mode))
 (editorconfig-mode 1)
 
+;; Fucking javascript bullshit
+;; (load-file "~/.emacs.d/vendor/prettier-js.el")
+;; (require 'prettier-js)
+;; (add-hook 'web-mode-hook 'prettier-js-mode)
+
 (provide 'packages)
 ;;; packages.el ends here
