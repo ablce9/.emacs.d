@@ -207,8 +207,6 @@ to make multiple eshell windows easier."
 (add-hook 'js-jsx-mode (lambda ()
 			 (setq js-indent-level 4)
 			 (setq indent-tabs-mode nil)))
-(add-hook 'typescript-mode (lambda ()
-			     (setq indent-tabs-mode nil)))
 
 (setq web-mode-code-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))

@@ -1,1 +1,2 @@
-Don't judge. This is the outcome of copy-and-paste. I have no idea about EmacsLisp.
+# Development configs
+  `.emacs.d` is meant for emacs config. However, `etc` has bunch of scripts/configs to make life a bit easier and fun, so the one doesn't use Emacs can also appreciate the stuff I use daily.
