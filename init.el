@@ -122,6 +122,7 @@ to make multiple eshell windows easier."
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell-script-mode)
 (global-set-key (kbd "C-c m") 'set-mark-command)
+(global-set-key (kbd "C-h C-g") 'helm-grep-do-git-grep)
 
 (add-to-list 'default-frame-alist '(font "Monospace-8"))
 (defun eshell/x ()
@@ -189,9 +190,9 @@ to make multiple eshell windows easier."
 (add-hook 'typescript-mode-hook (setq indent-tabs-mode nil))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-hook 'typescript-mode-hook
-	  (lambda ()
-	    (when (string-equal "tsx" (file-name-extension buffer-file-name))
-	      (setup-tide-mode))))
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
 ;; funky typescript linting in web-mode
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (with-eval-after-load 'tide
@@ -205,8 +206,8 @@ to make multiple eshell windows easier."
 (add-to-list 'flycheck-disabled-checkers 'javascript)
 
 (add-hook 'js-jsx-mode (lambda ()
-			 (setq js-indent-level 4)
-			 (setq indent-tabs-mode nil)))
+                         (setq js-indent-level 4)
+                         (setq indent-tabs-mode nil)))
 
 (setq web-mode-code-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
