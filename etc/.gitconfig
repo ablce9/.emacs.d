@@ -50,7 +50,7 @@
 	ft = "!f() { git describe --always --contains $1; }; f"
 
 	# Find the latest release branch
-	latest = describe --abbrev=0 --tags
+	latest = "!f() { git tag -l 'release-*' | tail -1; }; f"
 
 	# Find commits by source code
 	fc = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
@@ -84,6 +84,15 @@
 	# patchit = "!f() { curl -L $1.patch | git am --whitespace=fix; }; f"
 	patchit-please = "!f() { echo $1.patch | sed s_pull/[0-9]*/commits_commit_ | xargs curl -L | git am -3 --whitespace=fix; }; f"
 	# patchit-please = "!f() { curl -L $1.patch | git am -3 --whitespace=fix; }; f"
+
+	# Rest to the specified origin branch.
+	cu = "!f() { git reset --hard origin/$1; }; f"
+
+	# Update to master when working on some project
+	utm = "!f() { git checkout -b update-to-master-$(date '+%Y%m%d%H%M%S'); }; f"
+
+	# Show diff with merge branches from the latest tag to the working branch.
+	diff-from-latest-tag = "!f() { git rev-list --right-only $(git latest)...HEAD | xargs git show -q | grep 'Merge pull request' | sed -e 's/^[ \t]*//g'; }; f"
 
 [apply]
 	whitespace = fix
@@ -123,7 +132,7 @@
 	default = matching
 
 [commit]
-	gpgsign = true
+	gpgsign = false
 
 [mergetool.ediff]
 	cmd = emacs --eval \"\
