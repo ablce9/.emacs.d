@@ -29,6 +29,9 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
+;; konsole fucks things up.
+(normal-erase-is-backspace-mode 0)
+
 ;; prevent from adding a utf-8 comment
 (setq ruby-insert-encoding-magic-comment nil)
 
