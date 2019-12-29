@@ -12,11 +12,18 @@
 (package-initialize)
 
 (progn
-  ;; (global-set-key (kbd "M-x") 'helm-M-x)
-  ;; (global-set-key (kbd "C-h C-m") 'helm-mini)
-  (global-set-key (kbd "C-h C-b") 'helm-buffers-list)
-  (global-set-key (kbd "C-h C-a") 'helm-apropos)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-c C-m") 'helm-mini)
+  (global-set-key (kbd "C-c C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-c C-a") 'helm-apropos)
+  (global-set-key (kbd "C-c C-g") 'helm-grep-do-git-grep)
+  (global-set-key (kbd "C-c q") 'replace-regexp)
   (global-set-key (kbd "C-c t")   'beginning-of-buffer)
+  (global-set-key (kbd "C-c e") 'eshell-here)
+  (global-set-key (kbd "C-c o") 'open-nice)
+  (global-set-key (kbd "C-x g") 'goto-line)
+  (global-set-key (kbd "C-c s") 'shell-script-mode)
+  (global-set-key (kbd "C-c m") 'set-mark-command)
   (global-set-key (kbd "C-c r")   'end-of-buffer)
   (global-set-key (kbd "C-c u")   'ispell-region)
   (global-set-key (kbd "C-c ]") 'windmove-right)
@@ -30,7 +37,9 @@
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; konsole fucks things up.
-(normal-erase-is-backspace-mode 0)
+;; (normal-erase-is-backspace-mode 0)
+;; (setq help-char nil)
+;; (keyboard-translate ?\C-h ?\C-?)
 
 ;; prevent from adding a utf-8 comment
 (setq ruby-insert-encoding-magic-comment nil)
@@ -47,7 +56,6 @@
 			   "python -mjson.tool"
 			   (current-buffer) t))
 (define-key global-map (kbd "C-c q") 'replace-regexp)
-
 
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -97,7 +105,6 @@
 	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)))
-(global-set-key (kbd "C-c o") 'open-nice)
 
 (defun eshell-here()
   "Opens up a new shell in the directory associated with the
@@ -116,11 +123,6 @@ to make multiple eshell windows easier."
 
     (insert (concat "ls"))
     (eshell-send-input)))
-(global-set-key (kbd "C-c e") 'eshell-here)
-(global-set-key (kbd "C-x g") 'goto-line)
-(global-set-key (kbd "C-c s") 'shell-script-mode)
-(global-set-key (kbd "C-c m") 'set-mark-command)
-(global-set-key (kbd "C-h C-g") 'helm-grep-do-git-grep)
 
 (add-to-list 'default-frame-alist '(font "Monospace-8"))
 (defun eshell/x ()
