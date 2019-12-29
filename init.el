@@ -55,6 +55,7 @@
   (shell-command-on-region (point-min) (point-max)
 			   "python -mjson.tool"
 			   (current-buffer) t))
+
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
 (put 'narrow-to-page 'disabled nil)
@@ -82,8 +83,8 @@
 (load-directory "~/.emacs.d/elpa/")
 
 ;; theme
-;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-;;(load-theme 'jqg t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'jqg t)
 (global-hl-line-mode 1)
 (set-face-background 'hl-line "green")
 (set-face-foreground 'highlight nil)
@@ -92,7 +93,7 @@
 (defvar linum-format
   (setq linum-format "%3d \u2502"))
 (line-number-mode)
-;; (global-linum-mode 1)
+(global-linum-mode 1)
 (setq column-number-mode t)
 
 (defun open-nice()
