@@ -18,6 +18,7 @@
   (global-set-key (kbd "C-h C-a") 'helm-apropos)
   (global-set-key (kbd "C-c t")   'beginning-of-buffer)
   (global-set-key (kbd "C-c r")   'end-of-buffer)
+  (global-set-key (kbd "C-c u")   'ispell-region)
   (global-set-key (kbd "C-c ]") 'windmove-right)
   (global-set-key (kbd "C-c [") 'windmove-left)
   (global-set-key (kbd "C-c <up>") 'windmove-up)
@@ -116,6 +117,7 @@ to make multiple eshell windows easier."
 (global-set-key (kbd "C-x g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell-script-mode)
 (global-set-key (kbd "C-c m") 'set-mark-command)
+(global-set-key (kbd "C-h C-g") 'helm-grep-do-git-grep)
 
 (add-to-list 'default-frame-alist '(font "Monospace-8"))
 (defun eshell/x ()
@@ -152,18 +154,65 @@ to make multiple eshell windows easier."
 		(setq indent-tabs-mode t)
 		(setq show-trailing-whitespace t)
 		(c-set-style "linux-tabs-only")))))
+
+;; cc-mode indent
+(setq-default c-basic-offset 4)
+
+;; javascript FUCKS
+(defun load-eslint-from-node_modules ()
+  "Eslint loading from node_modules/eslint/bin/eslint."
+  (interactive)
+  (let* ((root (locate-dominating-file
+		(or (buffer-file-name) default-directory)
+		"node-module"))
+	 (eslint (and root
+		      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
+    (when (and eslint (file-executeable-p eslint))
+      (setq-local flycheck-javascript-eslint-executeable eslint))))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-add-next-checker 'typescript-tide '(t . typescript-tslint) 'append)
+  (eldoc-mode +1)
+  (company-mode +1)
+  (tide-hl-identifier-mode +1))
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+;; formats the buffer before saving
+;; (add-hook 'before-save-hook 'tide-format-before-save)
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook (setq indent-tabs-mode nil))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'typescript-mode-hook
+	  (lambda ()
+	    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+	      (setup-tide-mode))))
+;; funky typescript linting in web-mode
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+(with-eval-after-load 'tide
+  (flycheck-add-mode 'typescript-tslint 'react-ts-mode)
+  (flycheck-add-mode 'typescript-tide 'react-ts-mode)
+  )
+
+(setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+(add-hook 'json-mode-hook (lambda () (setq js-indent-level 2)))
+(add-to-list 'auto-mode-alist '("\\.\\(json\\)" . json-mode))
+(add-to-list 'flycheck-disabled-checkers 'javascript)
+
+(add-hook 'js-jsx-mode (lambda ()
+			 (setq js-indent-level 4)
+			 (setq indent-tabs-mode nil)))
+
+(setq web-mode-code-indent-offset 2)
+(add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.\\([pP][Llm]\\|al\\)" . cperl-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(zsh\\|sh\\|bash\\|ch\\)" . shell-script-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.go'" . go-mode))
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(add-to-list 'auto-mode-alist '("\\.slim" . slim-mode))
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (tide ruby-electric rubocop exec-path-from-shell elpy web-mode magit go-mode auto-complete helm flycheck))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
