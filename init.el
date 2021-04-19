@@ -41,7 +41,7 @@
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'flycheck-mode-hook
-          #'load-eslint-from-node_modules)
+	  #'load-eslint-from-node_modules)
 (add-hook 'ruby-mode-hook #'rubocop-mode)
 (add-hook 'ruby-mode-hook #'ruby-electric-mode)
 
@@ -52,13 +52,13 @@
   "Quick search :ITEM."
   (interactive "sitem: ")
   (shell-command(shell-command-to-string
-                 (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
+		 (concat "chromium https://duckduckgo.com/\?q=" "'"item"'" ))))
 (defun json-format ()
   "The go-format for json."
   (interactive)
   (shell-command-on-region (point-min) (point-max)
-                           "python -mjson.tool"
-                           (current-buffer) t))
+			   "python -mjson.tool"
+			   (current-buffer) t))
 (define-key global-map (kbd "C-c q") 'replace-regexp)
 
 
@@ -80,7 +80,7 @@
 ;; load-path
 (defun  load-directory (dir)
   (let ((loading (lambda (f)
-                   (load-file (concat (file-name-as-directory dir) f)))))
+		   (load-file (concat (file-name-as-directory dir) f)))))
     (mapc loading (directory-files dir nil "\\.el$"))))
 (load-directory "~/.emacs.d/vendor/")
 (load-directory "/usr/share/emacs/site-lisp/")
@@ -93,6 +93,7 @@
 (set-face-background 'hl-line "green")
 (set-face-foreground 'highlight nil)
 
+
 ;; line number
 (defvar linum-format
   (setq linum-format "%3d \u2502"))
@@ -104,10 +105,10 @@
   "A macro lets you open windows nice"
   (interactive)
   (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name))
-                   default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
+		     (file-name-directory (buffer-file-name))
+		   default-directory))
+	 (height (/ (window-total-height) 3))
+	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)))
 (global-set-key (kbd "C-c o") 'open-nice)
@@ -118,10 +119,10 @@ current buffer's file. The eshell is renamed to match that directory
 to make multiple eshell windows easier."
   (interactive)
   (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name))
-                   default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
+		     (file-name-directory (buffer-file-name))
+		   default-directory))
+	 (height (/ (window-total-height) 3))
+	 (name (car (last (split-string parent "/" t)))))
     (split-window-vertically (- height))
     (other-window 1)
     (eshell "new")
@@ -146,30 +147,30 @@ to make multiple eshell windows easier."
 (defun c-lineup-arglist-tabs-only (ignored)
   "Line up argument lists by tabs, not spaces :IGNORED."
   (let* ((anchor (c-langelem-pos c-syntactic-element))
-         (column (c-langelem-2nd-pos c-syntactic-element))
-         (offset (- (1+ column) anchor))
-         (steps (floor offset c-basic-offset)))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
     (* (max steps 1)
        c-basic-offset)))
 (add-hook 'c-mode-common-hook
-          (lambda ()
-            ;; Add kernel style
-            (c-add-style
-             "linux-tabs-only"
-             '("linux" (c-offsets-alist
-                        (arglist-cont-nonempty
-                         c-lineup-gcc-asm-reg
-                         c-lineup-arglist-tabs-only))))))
+	  (lambda ()
+	    ;; Add kernel style
+	    (c-add-style
+	     "linux-tabs-only"
+	     '("linux" (c-offsets-alist
+			(arglist-cont-nonempty
+			 c-lineup-gcc-asm-reg
+			 c-lineup-arglist-tabs-only))))))
 (add-hook 'c-mode-hook
-          (lambda ()
-            (let ((filename (buffer-file-name)))
-              ;; Enable kernel mode for the appropriate files
-              (when (and filename
-                         (string-match (expand-file-name "~/src/linux-trees")
-                                       filename))
-                (setq indent-tabs-mode t)
-                (setq show-trailing-whitespace t)
-                (c-set-style "linux-tabs-only")))))
+	  (lambda ()
+	    (let ((filename (buffer-file-name)))
+	      ;; Enable kernel mode for the appropriate files
+	      (when (and filename
+			 (string-match (expand-file-name "~/src/linux-trees")
+				       filename))
+		(setq indent-tabs-mode t)
+		(setq show-trailing-whitespace t)
+		(c-set-style "linux-tabs-only")))))
 
 ;; cc-mode indent
 (setq-default c-basic-offset 4)
@@ -179,10 +180,10 @@ to make multiple eshell windows easier."
   "Eslint loading from node_modules/eslint/bin/eslint."
   (interactive)
   (let* ((root (locate-dominating-file
-                (or (buffer-file-name) default-directory)
-                "node-module"))
-         (eslint (and root
-                      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
+		(or (buffer-file-name) default-directory)
+		"node-module"))
+	 (eslint (and root
+		      (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
     (when (and eslint (file-executeable-p eslint))
       (setq-local flycheck-javascript-eslint-executeable eslint))))
 
@@ -201,9 +202,9 @@ to make multiple eshell windows easier."
 (add-hook 'typescript-mode-hook (setq indent-tabs-mode nil))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-hook 'typescript-mode-hook
-          (lambda ()
-            (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode))))
+	  (lambda ()
+	    (when (string-equal "tsx" (file-name-extension buffer-file-name))
+	      (setup-tide-mode))))
 ;; funky typescript linting in web-mode
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (with-eval-after-load 'tide
@@ -217,8 +218,8 @@ to make multiple eshell windows easier."
 (add-to-list 'flycheck-disabled-checkers 'javascript)
 
 (add-hook 'js-jsx-mode (lambda ()
-                         (setq js-indent-level 4)
-                         (setq indent-tabs-mode nil)))
+			 (setq js-indent-level 4)
+			 (setq indent-tabs-mode nil)))
 
 (setq web-mode-code-indent-offset 2)
 (add-to-list 'auto-mode-alist '("\\.\\(html\\|scss\\|css\\|jsx\\|js\\)" . web-mode))
@@ -231,4 +232,61 @@ to make multiple eshell windows easier."
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (add-to-list 'auto-mode-alist '("\\.slim" . slim-mode))
+
+
+;; spell check
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(scala-mode org-static-blog web-mode tide ruby-electric rubocop magit helm go-mode exec-path-from-shell elpy editorconfig auto-complete)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; org-mode export body
+;; ref: https://orgmode.org/worg/org-tutorials/org-jekyll.html
+(setq org-publish-project-alist
+      '(
+
+	("org-weblog"
+	 ;; Path to your org files.
+	 :base-directory "~/.w/blog/_org/"
+	 :base-extension "org"
+
+	 ;; Path to your Jekyll project.
+	 ;; :publishing-directory "~/.w/blog/jekyll/"
+	 :publishing-directory "~/.w/blog/_posts/"
+	 :recursive t
+	 :publishing-function org-html-publish-to-html
+	 :headline-levels 4
+	 :html-extension "html"
+	 :body-only t ;; Only export section between <body> </body>
+	 )
+
+
+	("org-static-weblog"
+	 :base-directory "~/.w/blog/_org/"
+	 :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+	 :publishing-directory "~/w/blog"
+	 :recursive t
+	 :publishing-function org-publish-attachment)
+
+	("weblog" :components ("org-weblog" "org-static-weblog"))
+
+	)
+      )
+
+;; org-mode shortcuts
+
+(require 'org-tempo)
