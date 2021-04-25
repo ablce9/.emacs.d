@@ -4,3 +4,6 @@
 [submodule "vendor/enhanced-ruby-mode"]
 	path = vendor/enhanced-ruby-mode
 	url = git@github.com:zenspider/enhanced-ruby-mode
+[submodule "rust-mode"]
+	path = rust-mode
+	url = https://github.com/rust-lang/rust-mode.git
