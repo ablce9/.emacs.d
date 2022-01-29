@@ -1,6 +1,7 @@
 (require 'package)
 (add-to-list 'package-archives
 	     '("MELPA Stable" . "http://stable.melpa.org/packages/") t)
+(package-initialize)
 (if (not
      (fboundp 'flycheck-mode))
     (package-list-packages)
